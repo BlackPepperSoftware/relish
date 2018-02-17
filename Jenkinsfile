@@ -18,7 +18,6 @@ pipeline {
                 script {
                     if(isUnix()){
                         sh './gradlew clean build --info'
-
                     }
                     else{
                         bat 'gradlew.bat clean build --info'
