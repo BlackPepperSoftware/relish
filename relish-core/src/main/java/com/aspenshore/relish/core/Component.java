@@ -39,7 +39,7 @@ public abstract class Component implements Getable {
             if (result instanceof Component) {
                 ((Component) result).setStringValue(entry.getValue());
             } else {
-                throw new RuntimeException("Cannot set the value for " + entry.getKey() + "()");
+                throw new IllegalStateException("Cannot set the value for " + entry.getKey() + "()");
             }
         }
         return this;
@@ -62,11 +62,11 @@ public abstract class Component implements Getable {
             method = clazz.getDeclaredMethod(methodName);
             return method.invoke(this);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException("Unable to execute " + methodName + "() for " + this, e);
+            throw new IllegalStateException("Unable to execute " + methodName + "() for " + this, e);
         } catch (NoSuchMethodException nsme) {
-            throw new RuntimeException("Unable to execute " + methodName + "() for " + this, nsme);
+            throw new IllegalStateException("Unable to execute " + methodName + "() for " + this, nsme);
         } catch (InvocationTargetException ite) {
-            throw new RuntimeException("Unable to execute " + methodName + "() for " + this, ite);
+            throw new IllegalStateException("Unable to execute " + methodName + "() for " + this, ite);
         }
     }
 
@@ -82,6 +82,6 @@ public abstract class Component implements Getable {
     public abstract String getStringValue();
 
     public void setStringValue(String value) {
-        throw new RuntimeException("Cannot set string value for " + this);
+        throw new IllegalStateException("Cannot set string value for " + this);
     }
 }

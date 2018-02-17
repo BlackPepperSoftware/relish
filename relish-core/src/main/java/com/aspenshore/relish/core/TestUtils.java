@@ -8,17 +8,18 @@ public class TestUtils {
             try {
                 runnable.run();
                 succeeded = true;
-            } catch (Throwable e1) {
+            } catch (Exception e1) {
                 try {
                     Thread.sleep(pause);
                 } catch (InterruptedException e2) {
-                    e2.printStackTrace();
+                    throw new IllegalStateException("Interrupted pause", e2);
                 }
                 e = e1;
             }
         }
         if (!succeeded) {
-            throw new RuntimeException("Failed after several retries: " + e.getMessage(), e);
+            assert e != null;
+            throw new IllegalStateException("Failed after several retries: " + e.getMessage(), e);
         }
     }
 }
