@@ -17,10 +17,10 @@ pipeline {
             steps {
                 script {
                     if(isUnix()){
-                        sh './gradlew clean build check sonarqube --info'
+                        sh './gradlew clean build check sonarqube --info --stacktrace'
                     }
                     else{
-                        bat 'gradlew.bat clean build check sonarqube --info'
+                        bat 'gradlew.bat clean build check sonarqube --info --stacktrace'
                     }
                 }
             }
