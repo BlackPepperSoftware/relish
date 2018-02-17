@@ -24,11 +24,11 @@ public class TableRow implements Getable {
     public TableRow except(String... except) {
         List<String> exceptions = new ArrayList<>();
         for (String s : except) {
-            exceptions.add((s.toUpperCase()));
+            exceptions.add((s.toUpperCase(Locale.ENGLISH)));
         }
         Map<String, String> filteredMap = new HashMap<>();
         for (Map.Entry<String,String> entry : map.entrySet()) {
-            if (!exceptions.contains(entry.getKey().toUpperCase())) {
+            if (!exceptions.contains(entry.getKey().toUpperCase(Locale.ENGLISH))) {
                 filteredMap.put(entry.getKey(), entry.getValue());
             }
         }
@@ -44,11 +44,11 @@ public class TableRow implements Getable {
     public TableRow only(String... just) {
         List<String> onlyThese = new ArrayList<>();
         for (String s : just) {
-            onlyThese.add((s.toUpperCase()));
+            onlyThese.add((s.toUpperCase(Locale.ENGLISH)));
         }
         Map<String, String> filteredMap = new HashMap<>();
         for (Map.Entry<String,String> entry : map.entrySet()) {
-            if (onlyThese.contains(entry.getKey().toUpperCase())) {
+            if (onlyThese.contains(entry.getKey().toUpperCase(Locale.ENGLISH))) {
                 filteredMap.put(entry.getKey(), entry.getValue());
             }
         }

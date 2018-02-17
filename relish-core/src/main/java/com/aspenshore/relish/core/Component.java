@@ -61,8 +61,12 @@ public abstract class Component implements Getable {
         try {
             method = clazz.getDeclaredMethod(methodName);
             return method.invoke(this);
-        } catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (IllegalAccessException e) {
             throw new RuntimeException("Unable to execute " + methodName + "() for " + this, e);
+        } catch (NoSuchMethodException nsme) {
+            throw new RuntimeException("Unable to execute " + methodName + "() for " + this, nsme);
+        } catch (InvocationTargetException ite) {
+            throw new RuntimeException("Unable to execute " + methodName + "() for " + this, ite);
         }
     }
 

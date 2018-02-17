@@ -1,4 +1,4 @@
-package com.aspenshore.relish.espresso;
+package com.aspenshore.relish.selenide;
 
 import com.aspenshore.relish.core.Component;
 import com.codeborne.selenide.Configuration;

@@ -13,6 +13,10 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -25,5 +29,4 @@ dependencies {
     compile project(':relish-core')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support.test.espresso:espresso-core:2.2.2'
-//    compile 'junit:junit:4.12'
 }
