@@ -1,7 +1,5 @@
 #!groovy
 
-slack 'Starting build pipeline for relish '
-
 pipeline {
     agent any
 
