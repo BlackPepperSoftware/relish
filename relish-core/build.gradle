@@ -2,6 +2,7 @@ group 'com.aspenshore'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: "org.sonarqube"
 
 sourceCompatibility = 1.8
 
