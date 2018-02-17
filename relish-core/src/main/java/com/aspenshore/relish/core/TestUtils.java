@@ -12,7 +12,7 @@ public class TestUtils {
                 try {
                     Thread.sleep(pause);
                 } catch (InterruptedException e2) {
-                    throw new IllegalStateException("Interrupted pause", e2);
+                    Thread.currentThread().interrupt();
                 }
                 e = e1;
             }
