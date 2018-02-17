@@ -23,6 +23,22 @@ public class Checkbox extends SelenideWidget {
         super(elem, parent);
     }
 
+    @Override
+    public String getStringValue() {
+        assertVisible();
+        return get().isSelected() ? "true" : "false";
+    }
+
+    @Override
+    public void setStringValue(String value) {
+        assertVisible();
+        if (FALSISH.contains(value.toUpperCase(Locale.ENGLISH))) {
+            uncheck();
+        } else {
+            check();
+        }
+    }
+
     public void uncheck() {
         assertVisible();
         if (get().isSelected()) {
@@ -50,19 +66,5 @@ public class Checkbox extends SelenideWidget {
                 get().shouldNotHave(checked);
             }
         }, 1000, 3);
-    }
-
-    public String getStringValue() {
-        assertVisible();
-        return get().isSelected() ? "true" : "false";
-    }
-
-    public void setStringValue(String value) {
-        assertVisible();
-        if (FALSISH.contains(value.toUpperCase(Locale.ENGLISH))) {
-            uncheck();
-        } else {
-            check();
-        }
     }
 }

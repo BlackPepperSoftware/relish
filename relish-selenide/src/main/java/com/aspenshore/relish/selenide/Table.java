@@ -39,7 +39,7 @@ public class Table extends SelenideWidget {
         String[] headings = headings();
         List<List<String>> rowsWithTdStrings = get().findElements(By.tagName("tr")).stream()
                 // Ignore rows without TD elements
-                .filter(e -> e.findElements(By.tagName("td")).size() > 0)
+                .filter(e -> e.findElements(By.tagName("td")).isEmpty())
                 // Then turn each row of TDs into a list of their string-contents
                 .map(row -> row.findElements(By.tagName("td")).stream().map(e -> e.getText()).collect(toList()))
                 .collect(toList());
