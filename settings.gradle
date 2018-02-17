@@ -1,4 +1,6 @@
+include ':relish-espresso', ':relish-espresso'
 rootProject.name = 'relish'
 include 'relish-core'
 include 'relish-selenide'
+include 'relish-espresso'
 
