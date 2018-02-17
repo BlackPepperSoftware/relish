@@ -57,11 +57,7 @@ public class EspressoWidget extends Widget<ViewInteraction> {
 
     @Override
     public void assertVisible() {
-        try {
-            get().check(ViewAssertions.matches(isDisplayed()));
-        } catch(NoMatchingViewException e) {
-            // Do nothing
-        }
+        get().check(ViewAssertions.matches(isDisplayed()));
     }
 
     @Override
