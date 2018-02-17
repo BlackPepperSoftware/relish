@@ -19,14 +19,6 @@ buildscript {
     }
 }
 
-repositories {
-    mavenLocal()
-    google()
-    jcenter()
-    mavenCentral()
-    maven { url 'http://repo1.maven.org/maven2' }
-}
-
 allprojects {
     repositories {
         mavenLocal()
