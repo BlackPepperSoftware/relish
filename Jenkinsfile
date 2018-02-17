@@ -17,10 +17,10 @@ pipeline {
             steps {
                 script {
                     if(isUnix()){
-                        sh './gradlew clean build :relish-core:sonarqube --info'
+                        sh './gradlew clean build :relish-core:sonarqube :relish-selenide:sonarqube :relish-espresso:sonarqube --info'
                     }
                     else{
-                        bat 'gradlew.bat clean build --info'
+                        bat 'gradlew.bat clean build :relish-core:sonarqube :relish-selenide:sonarqube :relish-espresso:sonarqube --info'
                     }
                 }
             }
@@ -29,8 +29,8 @@ pipeline {
     post {
         always {
             script {
-                archiveArtifacts allowEmptyArchive: true, artifacts: 'relish-core/build/libs/relish-core-*.aar'
-                archiveArtifacts allowEmptyArchive: true, artifacts: 'relish-selenide/build/libs/relish-core-*.aar'
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'relish-core/build/libs/relish-core-*.jar'
+                archiveArtifacts allowEmptyArchive: true, artifacts: 'relish-selenide/build/libs/relish-core-*.jar'
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'relish-espresso/build/outputs/aar/relish-espresso-release.aar'
             }
         }
