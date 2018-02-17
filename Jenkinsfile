@@ -17,10 +17,10 @@ pipeline {
             steps {
                 script {
                     if(isUnix()){
-                        sh './gradlew clean build :relish-core:sonarqube :relish-selenide:sonarqube :relish-espresso:sonarqube --info'
+                        sh './gradlew clean build check sonarqube --info'
                     }
                     else{
-                        bat 'gradlew.bat clean build :relish-core:sonarqube :relish-selenide:sonarqube :relish-espresso:sonarqube --info'
+                        bat 'gradlew.bat clean build check sonarqube --info'
                     }
                 }
             }
