@@ -5,7 +5,9 @@ public abstract class Widget<T> extends Component {
 
     public Widget(T peer, Component parent) {
         super(parent);
-        assert parent != null;
+        if (parent == null) {
+            throw new IllegalArgumentException("Parent cannot be null");
+        }
         parent.assertVisible();
         this.peer = peer;
     }
