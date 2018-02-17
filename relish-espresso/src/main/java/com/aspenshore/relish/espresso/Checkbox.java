@@ -23,7 +23,7 @@ import static com.aspenshore.relish.core.TestUtils.attempt;
 import static org.hamcrest.Matchers.not;
 
 public class Checkbox extends EspressoWidget {
-    public static final List<String> FALSISH = Arrays.asList("NO", "F", "N", "OFF", "0", "DISABLED", "0.0", "FALSE");
+    private static final List<String> FALSISH = Arrays.asList("NO", "F", "N", "OFF", "0", "DISABLED", "0.0", "FALSE");
 
     public Checkbox(ViewInteraction peer, Component parent) {
         super(peer, parent);

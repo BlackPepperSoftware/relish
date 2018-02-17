@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Condition.checked;
 import static com.codeborne.selenide.Condition.not;
 
 public class Checkbox extends SelenideWidget {
-    public static final List<String> FALSISH = Arrays.asList("NO", "F", "N", "OFF", "0", "DISABLED", "0.0", "FALSE");
+    private static final List<String> FALSISH = Arrays.asList("NO", "F", "N", "OFF", "0", "DISABLED", "0.0", "FALSE");
 
     public Checkbox(By selector, Component parent) {
         super(selector, parent);
