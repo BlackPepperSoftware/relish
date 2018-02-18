@@ -24,7 +24,7 @@ pipeline {
                             '-p /tmp/myserver.pid ' +
                             '-l /tmp/myserver.lock ' +
                             '-o /tmp/myserver.out ' +
-                            '-c examples/selenide/website ' +
+                            '-c "$PWD/examples/selenide/website" ' +
                             '/usr/bin/python -m SimpleHTTPServer 2>&1 > /tmp/myserver.runout'
                     if(isUnix()){
                         sh './gradlew clean build check sonarqube --info --stacktrace'
