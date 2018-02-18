@@ -16,6 +16,9 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    sh '[ -f /tmp/myserver.pid ] && kill $(cat /tmp/myserver.pid)'
+                    sh 'rm -f /tmp/myserver.pid'
+                    sh 'rm -f /tmp/myserver.lock'
                     sh '/usr/local/sbin/daemonize ' +
                             '-E BUILD_ID=dontKillMe ' +
                             '-p /tmp/myserver.pid ' +
@@ -28,9 +31,6 @@ pipeline {
                     else{
                         bat 'gradlew.bat clean build check sonarqube --info --stacktrace'
                     }
-                    sh 'kill $(cat /tmp/myserver.pid)'
-                    sh 'rm /tmp/myserver.pid'
-                    sh 'rm /tmp/myserver.lock'
                 }
             }
         }
@@ -42,6 +42,9 @@ pipeline {
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'relish-core/build/libs/relish-core-*.jar'
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'relish-selenide/build/libs/relish-selenide-*.jar'
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'relish-espresso/build/outputs/aar/relish-espresso-release.aar'
+                sh '[ -f /tmp/myserver.pid ] && kill $(cat /tmp/myserver.pid)'
+                sh 'rm -f /tmp/myserver.pid'
+                sh 'rm -f /tmp/myserver.lock'
             }
         }
         failure {
