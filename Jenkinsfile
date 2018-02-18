@@ -23,6 +23,7 @@ pipeline {
                             '-E BUILD_ID=dontKillMe ' +
                             '-p /tmp/myserver.pid ' +
                             '-l /tmp/myserver.lock ' +
+                            '-o /tmp/myserver.out ' +
                             '-c examples/selenide/website ' +
                             '/usr/bin/python -m SimpleHTTPServer'
                     if(isUnix()){
