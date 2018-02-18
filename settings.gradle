@@ -2,4 +2,5 @@ rootProject.name = 'relish'
 include 'relish-core'
 include 'relish-selenide'
 include 'relish-espresso'
+include 'examples:selenide:example-selenide'
 
