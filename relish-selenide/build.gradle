@@ -2,12 +2,32 @@ group 'com.aspenshore'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
-apply plugin: "org.sonarqube"
+apply plugin: 'org.sonarqube'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+def coverageSourceDirs = [
+        'src/main/java',
+]
+
+task unitCoverageReport(type: JacocoReport, dependsOn: "test") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+    classDirectories = fileTree(
+            dir: "$buildDir/classes/java/main",
+            excludes: [
+            ])
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files("$buildDir/jacoco/test.exec")
 }
 
 dependencies {

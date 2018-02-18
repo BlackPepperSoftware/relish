@@ -27,10 +27,10 @@ pipeline {
                             '-c "$PWD/examples/selenide/website" ' +
                             '/usr/bin/python -m SimpleHTTPServer 2>&1 > /tmp/myserver.runout'
                     if(isUnix()){
-                        sh './gradlew clean build check sonarqube --info --stacktrace'
+                        sh './gradlew clean build check unitCoverageReport sonarqube --info --stacktrace'
                     }
                     else{
-                        bat 'gradlew.bat clean build check sonarqube --info --stacktrace'
+                        bat 'gradlew.bat clean build check unitCoverageReport sonarqube --info --stacktrace'
                     }
                 }
             }
