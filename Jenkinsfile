@@ -15,7 +15,6 @@ pipeline {
         }
         stage('Build') {
             steps {
-                setBuildStatus("Build in progress", "IN-PROGRESS");
                 script {
                     sh '[ -f /tmp/myserver.pid ] && (kill $(cat /tmp/myserver.pid) || echo "Old server gone")'
                     sh 'rm -f /tmp/myserver.pid'
@@ -49,26 +48,12 @@ pipeline {
                 sh 'rm -f /tmp/myserver.lock'
             }
         }
-        success {
-            setBuildStatus("Build succeeded", "SUCCESS");
-        }
         failure {
             slack "Build failed: ${currentBuild.result}", '#ff0000'
-            setBuildStatus("Build failed", "FAILURE")
         }
     }
 }
 
 def slack(String msg, String color = '#000000') {
     slackSend channel: 'builds', color: color, message: msg, teamDomain: 'aspenshore', tokenCredentialId: 'timekeeper-slack'
-}
-
-void setBuildStatus(String message, String state) {
-    step([
-            $class: "GitHubCommitStatusSetter",
-            reposSource: [$class: "ManuallyEnteredRepositorySource", url: "https://github.com/dogriffiths/relish"],
-            contextSource: [$class: "ManuallyEnteredCommitContextSource", context: "ci/jenkins/build-status"],
-            errorHandlers: [[$class: "ChangingBuildStatusErrorHandler", result: "UNSTABLE"]],
-            statusResultSource: [ $class: "ConditionalStatusResultSource", results: [[$class: "AnyBuildResult", message: message, state: state]] ]
-    ]);
 }
