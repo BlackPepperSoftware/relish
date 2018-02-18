@@ -119,10 +119,10 @@ public class TableRowMatchers {
         public String toString() {
             return "ItemRowGetableMatcher: " + super.toString();
         }
-    }
 
-    private static GetableMatcher hasGetableValue(String keyName, Matcher matcher) {
-        return new GetableMatcher(keyName, matcher);
+        private static GetableMatcher hasGetableValue(String keyName, Matcher matcher) {
+            return new GetableMatcher(keyName, matcher);
+        }
     }
 
     private static class GetableMatcher extends TypeSafeDiagnosingMatcher<Getable> {

@@ -19,6 +19,15 @@ public class TableRow implements Getable {
     }
 
     /**
+     * Instantiates a new Table row.
+     *
+     * @param map containing values for the row
+     */
+    public TableRow(Map<String,String> map) {
+        this.map = map;
+    }
+
+    /**
      * Return a cut-down version of the row, excluding the specified columns.
      *
      * @param columnNames the except
@@ -58,21 +67,7 @@ public class TableRow implements Getable {
         return new TableRow(filteredMap);
     }
 
-    /**
-     * Instantiates a new Table row.
-     *
-     * @param map containing values for the row
-     */
-    public TableRow(Map<String,String> map) {
-        this.map = map;
-    }
-
-    /**
-     * Get a row value by name.
-     *
-     * @param key the key
-     * @return the string
-     */
+    @Override
     public String get(String key) {
         return replaceExpressions(map.get(key));
     }
