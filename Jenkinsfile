@@ -16,12 +16,21 @@ pipeline {
         stage('Build') {
             steps {
                 script {
+                    sh '/usr/local/sbin/daemonize ' +
+                            '-E BUILD_ID=dontKillMe ' +
+                            '-p /tmp/myserver.pid ' +
+                            '-l /tmp/myserver.lock ' +
+                            '-c examples/selenide/website ' +
+                            '/usr/bin/python -m SimpleHTTPServer'
                     if(isUnix()){
                         sh './gradlew clean build check sonarqube --info --stacktrace'
                     }
                     else{
                         bat 'gradlew.bat clean build check sonarqube --info --stacktrace'
                     }
+                    sh 'kill $(cat /tmp/myserver.pid)'
+                    sh 'rm /tmp/myserver.pid'
+                    sh 'rm /tmp/myserver.lock'
                 }
             }
         }
