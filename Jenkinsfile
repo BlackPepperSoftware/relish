@@ -16,7 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh '[ -f /tmp/myserver.pid ] && (kill $(cat /tmp/myserver.pid) || echo "Old server gone")'
+                    sh 'if [ -f /tmp/myserver.pid ]; then (kill $(cat /tmp/myserver.pid) || echo "Old server gone"); fi'
                     sh 'rm -f /tmp/myserver.pid'
                     sh 'rm -f /tmp/myserver.lock'
                     sh '/usr/local/sbin/daemonize ' +
@@ -43,7 +43,7 @@ pipeline {
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'relish-core/build/libs/relish-core-*.jar'
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'relish-selenide/build/libs/relish-selenide-*.jar'
                 archiveArtifacts allowEmptyArchive: true, artifacts: 'relish-espresso/build/outputs/aar/relish-espresso-release.aar'
-                sh '[ -f /tmp/myserver.pid ] && kill $(cat /tmp/myserver.pid)'
+                sh 'if [ -f /tmp/myserver.pid ]; then (kill $(cat /tmp/myserver.pid) || echo "Old server gone"); fi'
                 sh 'rm -f /tmp/myserver.pid'
                 sh 'rm -f /tmp/myserver.lock'
             }
