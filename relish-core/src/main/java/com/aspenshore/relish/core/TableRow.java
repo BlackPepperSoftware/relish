@@ -4,6 +4,9 @@ import cucumber.deps.com.thoughtworks.xstream.annotations.XStreamConverter;
 
 import java.util.*;
 
+/**
+ * The type Table row.
+ */
 @XStreamConverter(TableRowConverter.class)
 public class TableRow implements Getable {
     private final Map<String,String> map;
@@ -16,15 +19,15 @@ public class TableRow implements Getable {
     }
 
     /**
-     * Except table row.
+     * Return a cut-down version of the row, excluding the specified columns.
      *
-     * @param except the except
+     * @param columnNames the except
      * @return the table row
      */
-    public TableRow except(String... except) {
+    public TableRow except(String... columnNames) {
         List<String> exceptions = new ArrayList<>();
-        for (String s : except) {
-            exceptions.add((s.toUpperCase(Locale.ENGLISH)));
+        for (String columnName : columnNames) {
+            exceptions.add(columnName.toUpperCase(Locale.ENGLISH));
         }
         Map<String, String> filteredMap = new HashMap<>();
         for (Map.Entry<String,String> entry : map.entrySet()) {
@@ -36,15 +39,15 @@ public class TableRow implements Getable {
     }
 
     /**
-     * Only table row.
+     * Return a cut-down version of this row, containing only the specified columns.
      *
-     * @param just the just
-     * @return the table row
+     * @param columnNames the only columns to include
+     * @return row containing only the specified columns
      */
-    public TableRow only(String... just) {
+    public TableRow only(String... columnNames) {
         List<String> onlyThese = new ArrayList<>();
-        for (String s : just) {
-            onlyThese.add((s.toUpperCase(Locale.ENGLISH)));
+        for (String columnName : columnNames) {
+            onlyThese.add(columnName.toUpperCase(Locale.ENGLISH));
         }
         Map<String, String> filteredMap = new HashMap<>();
         for (Map.Entry<String,String> entry : map.entrySet()) {
@@ -58,14 +61,14 @@ public class TableRow implements Getable {
     /**
      * Instantiates a new Table row.
      *
-     * @param map the map
+     * @param map containing values for the row
      */
     public TableRow(Map<String,String> map) {
         this.map = map;
     }
 
     /**
-     * Get string.
+     * Get a row value by name.
      *
      * @param key the key
      * @return the string
@@ -74,16 +77,21 @@ public class TableRow implements Getable {
         return replaceExpressions(map.get(key));
     }
 
+    /**
+     * Convert the table-row to a map.
+     *
+     * @return the map
+     */
     public Map<String,Object> toObjectMap() {
-        HashMap<String, Object> map = new HashMap<>();
+        HashMap<String, Object> clonedMap = new HashMap<>();
         for (String key : this.map.keySet()) {
-            map.put(key, get(key));
+            clonedMap.put(key, get(key));
         }
-        return map;
+        return clonedMap;
     }
 
     /**
-     * Put.
+     * Put a new value into the row.
      *
      * @param key   the key
      * @param value the value
@@ -93,7 +101,7 @@ public class TableRow implements Getable {
     }
 
     /**
-     * Entry set set.
+     * Entries in this row.
      *
      * @return the set
      */

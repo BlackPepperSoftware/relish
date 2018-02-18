@@ -1,6 +1,20 @@
 package com.aspenshore.relish.core;
 
+/**
+ * The type Test utils.
+ */
 public class TestUtils {
+    private TestUtils() {
+        // Should not be instantiated
+    }
+
+    /**
+     * Attempt.
+     *
+     * @param runnable the runnable
+     * @param pause    the pause
+     * @param times    the times
+     */
     public static void attempt(Runnable runnable, int pause, int times) {
         boolean succeeded = false;
         Throwable e = null;

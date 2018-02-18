@@ -10,6 +10,9 @@ import cucumber.deps.com.thoughtworks.xstream.io.HierarchicalStreamReader;
 import cucumber.deps.com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 
+/**
+ * The type Table row converter.
+ */
 public class TableRowConverter implements Converter {
 
     @Override

@@ -12,7 +12,14 @@ import java.util.Map;
 import static org.hamcrest.Matchers.*;
 
 
+/**
+ * The type Table row matchers.
+ */
 public class TableRowMatchers {
+    private TableRowMatchers() {
+        // Should not be instantiated.
+    }
+
     /**
      * Bean matches all matcher.
      *
@@ -35,14 +42,14 @@ public class TableRowMatchers {
 
     private static class ItemRowBeanMatcher extends BaseMatcher {
 
-        private final Matcher<Object> matcher;
+        private final Matcher matcher;
 
         /**
          * Instantiates a new Item row bean matcher.
          *
          * @param tableRow the table row
          */
-        public ItemRowBeanMatcher(TableRow tableRow) {
+        ItemRowBeanMatcher(TableRow tableRow) {
             List<Matcher<Object>> result = new ArrayList<>();
             for (Map.Entry<String,String> entry : tableRow.entrySet()) {
                 Matcher<Object> objectMatcher = hasProperty(entry.getKey(), equalTo(entry.getValue()));
@@ -64,7 +71,7 @@ public class TableRowMatchers {
 
     private static class ItemRowGetableMatcher extends BaseMatcher<Getable> {
 
-        private final Matcher<Getable> matcher;
+        private final Matcher matcher;
         private final TableRow tableRow;
 
         /**
@@ -72,7 +79,7 @@ public class TableRowMatchers {
          *
          * @param tableRow the table row
          */
-        public ItemRowGetableMatcher(TableRow tableRow) {
+        ItemRowGetableMatcher(TableRow tableRow) {
             this.tableRow = tableRow;
             List<GetableMatcher> result = new ArrayList<>();
             for (Map.Entry<String,String> entry : tableRow.entrySet()) {
@@ -88,11 +95,16 @@ public class TableRowMatchers {
             return matcher.matches(getable);
         }
 
+        @Override
         public void describeMismatch(Object item, Description description) {
             final Getable getable = (Getable) item;
             StringBuilder result = new StringBuilder();
             for (Map.Entry<String,String> e : tableRow.entrySet()) {
-                result.append("match '" + e.getKey() + "' with '" + getable.get(e.getKey()) + "' and ");
+                result.append("match '")
+                        .append(e.getKey())
+                        .append("' with '")
+                        .append(getable.get(e.getKey()))
+                        .append("' and ");
             }
             String actualDesc = result.toString();
             description.appendText("was ").appendValue(actualDesc);
@@ -103,6 +115,7 @@ public class TableRowMatchers {
             matcher.describeTo(description);
         }
 
+        @Override
         public String toString() {
             return "ItemRowGetableMatcher: " + super.toString();
         }
@@ -123,7 +136,7 @@ public class TableRowMatchers {
          * @param key        the key
          * @param keyMatcher the key matcher
          */
-        public GetableMatcher(String key, Matcher keyMatcher) {
+        GetableMatcher(String key, Matcher keyMatcher) {
             this.key = key;
             this.keyMatcher = keyMatcher;
         }
@@ -139,6 +152,7 @@ public class TableRowMatchers {
             return keyMatcher.matches(getable.get(key));
         }
 
+        @Override
         public String toString() {
             return "GetableMatcher: " + super.toString();
         }
