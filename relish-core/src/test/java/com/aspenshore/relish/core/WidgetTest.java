@@ -4,6 +4,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
@@ -24,6 +25,13 @@ public class WidgetTest {
         doThrow(new AssertionError("Not visible")).when(parent).assertVisible();
         expectedException.expect(AssertionError.class);
         create("A peer", parent);
+    }
+
+    @Test
+    public void canGetTheSamePeerBack() {
+        Component parent = mock(Component.class);
+        Widget widget = create("A peer", parent);
+        assertEquals(widget.get(), "A peer");
     }
 
     private Widget create(final String peer, final Component parent) {
