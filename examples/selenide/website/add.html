@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add a task</title>
+    <script lang="javascript">
+        function save() {
+            var taskString = localStorage.getItem("tasks");
+            var tasks = [];
+            if (taskString) {
+                tasks = JSON.parse(taskString);
+            }
+            tasks.push({name: document.getElementById('name').value});
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+            window.location="index.html";
+        }
+    </script>
+</head>
+<body>
+<h1>Add a task</h1>
+<form>
+    <label for="name">Name</label>
+    <input id="name" name="name">
+    <button onClick="save(); return false;" class="saveButton">Save</button>
+</form>
+</body>
+</html>

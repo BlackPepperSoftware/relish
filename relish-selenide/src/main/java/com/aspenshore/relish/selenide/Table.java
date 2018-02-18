@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.aspenshore.relish.core.TestUtils.attempt;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -39,7 +40,7 @@ public class Table extends SelenideWidget {
         String[] headings = headings();
         List<List<String>> rowsWithTdStrings = get().findElements(By.tagName("tr")).stream()
                 // Ignore rows without TD elements
-                .filter(e -> e.findElements(By.tagName("td")).isEmpty())
+                .filter(e -> !e.findElements(By.tagName("td")).isEmpty())
                 // Then turn each row of TDs into a list of their string-contents
                 .map(row -> row.findElements(By.tagName("td")).stream().map(e -> e.getText()).collect(toList()))
                 .collect(toList());
@@ -58,11 +59,13 @@ public class Table extends SelenideWidget {
     }
 
     public void matches(List<TableRow> sheetTable) {
-        List<Getable> screenRows = data();
-        int i = 0;
-        for (TableRow assertRow : sheetTable) {
-            assertThat(screenRows.get(i++), TableRowMatchers.getableMatchesAll(assertRow));
-        }
+        attempt(() -> {
+            List<Getable> screenRows = data();
+            int i = 0;
+            for (TableRow assertRow : sheetTable) {
+                assertThat(screenRows.get(i++), TableRowMatchers.getableMatchesAll(assertRow));
+            }
+        }, 500, 3);
     }
 
     private String toGetter(String s) {
