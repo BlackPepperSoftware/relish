@@ -16,7 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh '[ -f /tmp/myserver.pid ] && (kill $(cat /tmp/myserver.pid) || echo "Old server gone)'
+                    sh '[ -f /tmp/myserver.pid ] && (kill $(cat /tmp/myserver.pid) || echo "Old server gone")'
                     sh 'rm -f /tmp/myserver.pid'
                     sh 'rm -f /tmp/myserver.lock'
                     sh '/usr/local/sbin/daemonize ' +
