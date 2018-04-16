@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/examples/selenide/example-selenide/example-selenide.iml" filepath="$PROJECT_DIR$/examples/selenide/example-selenide/example-selenide.iml" />
+      <module fileurl="file://$PROJECT_DIR$/examples/examples.iml" filepath="$PROJECT_DIR$/examples/examples.iml" />
+      <module fileurl="file://$PROJECT_DIR$/relish.iml" filepath="$PROJECT_DIR$/relish.iml" />
+      <module fileurl="file://$PROJECT_DIR$/relish-core/relish-core.iml" filepath="$PROJECT_DIR$/relish-core/relish-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/relish-espresso/relish-espresso.iml" filepath="$PROJECT_DIR$/relish-espresso/relish-espresso.iml" />
+      <module fileurl="file://$PROJECT_DIR$/relish-selenide/relish-selenide.iml" filepath="$PROJECT_DIR$/relish-selenide/relish-selenide.iml" />
+      <module fileurl="file://$PROJECT_DIR$/examples/selenide/selenide.iml" filepath="$PROJECT_DIR$/examples/selenide/selenide.iml" />
+    </modules>
+  </component>
+</project>

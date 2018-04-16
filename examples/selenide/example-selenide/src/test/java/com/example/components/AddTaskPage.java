@@ -1,9 +1,9 @@
 package com.example.components;
 
-import com.aspenshore.relish.selenide.InputText;
-import com.aspenshore.relish.selenide.Page;
-import com.aspenshore.relish.selenide.SelenideWidget;
-import com.aspenshore.relish.selenide.Table;
+import uk.co.blackpepper.relish.selenide.InputText;
+import uk.co.blackpepper.relish.selenide.Page;
+import uk.co.blackpepper.relish.selenide.SelenideWidget;
+import uk.co.blackpepper.relish.selenide.Table;
 import org.openqa.selenium.By;
 
 public class AddTaskPage extends Page {

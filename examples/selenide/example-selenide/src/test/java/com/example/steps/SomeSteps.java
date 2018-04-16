@@ -1,6 +1,6 @@
 package com.example.steps;
 
-import com.aspenshore.relish.core.TableRow;
+import uk.co.blackpepper.relish.core.TableRow;
 import com.example.components.AddTaskPage;
 import com.example.components.TaskPage;
 import cucumber.api.PendingException;
