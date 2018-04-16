@@ -1,4 +1,4 @@
-group 'com.aspenshore'
+group 'uk.co.blackpepper'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'

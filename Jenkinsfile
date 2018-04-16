@@ -48,12 +48,6 @@ pipeline {
                 sh 'rm -f /tmp/myserver.lock'
             }
         }
-        failure {
-            slack "Build failed: ${currentBuild.result}", '#ff0000'
-        }
     }
 }
 
-def slack(String msg, String color = '#000000') {
-    slackSend channel: 'builds', color: color, message: msg, teamDomain: 'aspenshore', tokenCredentialId: 'timekeeper-slack'
-}

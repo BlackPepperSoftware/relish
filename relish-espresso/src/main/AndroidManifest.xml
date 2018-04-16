@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
-          package="com.aspenshore.relish.espresso"
+          package="uk.co.blackpepper.relish.espresso"
 >
 
     <application android:allowBackup="true"
