@@ -22,14 +22,16 @@
     if (taskString) {
         tasks = JSON.parse(taskString);
     }
-    for (var i = 0; i < tasks.length; i++) {
+    window.setTimeout(function () {
+      for (var i = 0; i < tasks.length; i++) {
         var task = tasks[i];
         var taskRow = document.createElement("tr");
         var nameCell = document.createElement("td");
         nameCell.appendChild(document.createTextNode(task.name));
         listBody.appendChild(taskRow);
         taskRow.appendChild(nameCell)
-    }
+      }
+    }, 1000);
 </script>
 </body>
 </html>

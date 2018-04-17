@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <title>Add a task</title>
     <script lang="javascript">
-        function save() {
-            var taskString = localStorage.getItem("tasks");
-            var tasks = [];
-            if (taskString) {
-                tasks = JSON.parse(taskString);
-            }
-            tasks.push({name: document.getElementById('name').value});
-            localStorage.setItem("tasks", JSON.stringify(tasks));
-            window.location="index.html";
+      function save() {
+        var taskString = localStorage.getItem("tasks");
+        var tasks = [];
+        if (taskString) {
+          tasks = JSON.parse(taskString);
         }
+        tasks.push({name: document.getElementById('name').value});
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+        window.setTimeout(function () {
+          window.location = "index.html";
+        }, 1000);
+      }
     </script>
 </head>
 <body>

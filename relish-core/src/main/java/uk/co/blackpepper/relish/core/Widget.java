@@ -43,6 +43,11 @@ public abstract class Widget<T> extends Component {
     public abstract void assertInvisible();
 
     /**
+     * Assert invisible.
+     */
+    public abstract void assertVisible();
+
+    /**
      * Assert disabled.
      */
     public abstract void assertDisabled();

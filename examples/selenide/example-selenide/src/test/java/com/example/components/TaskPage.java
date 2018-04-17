@@ -1,17 +1,18 @@
 package com.example.components;
 
+import org.openqa.selenium.By;
+
+import uk.co.blackpepper.relish.selenide.HtmlTable;
 import uk.co.blackpepper.relish.selenide.Page;
 import uk.co.blackpepper.relish.selenide.SelenideWidget;
-import uk.co.blackpepper.relish.selenide.Table;
-import org.openqa.selenium.By;
 
 public class TaskPage extends Page {
     public TaskPage() {
         super("/index.html");
     }
 
-    public Table taskTable() {
-        return new Table(By.className("tasks"), this);
+    public HtmlTable taskTable() {
+        return new HtmlTable(By.className("tasks"), this);
     }
 
     public SelenideWidget addButton() {

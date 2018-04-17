@@ -105,7 +105,7 @@ public abstract class Component implements Getable {
      *
      * @param s the s
      */
-    public void assertHasValue(final String s) {
+    public void matches(final String s) {
         attempt(new Runnable() {
             @Override
             public void run() {

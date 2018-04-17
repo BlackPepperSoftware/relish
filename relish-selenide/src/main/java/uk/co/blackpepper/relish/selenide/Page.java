@@ -22,14 +22,7 @@ public class Page extends Component {
 
     @Override
     public void assertVisible() {
-        attempt(new Runnable() {
-            @Override
-            public void run() {
-                String currentUrl = getWebDriver().getCurrentUrl();
-                boolean condition = Page.this.matchesUrl(currentUrl);
-                assertTrue(condition);
-            }
-        }, 500, 20);
+        attempt(() -> assertTrue(this.matchesUrl(getWebDriver().getCurrentUrl())), 500, 20);
     }
 
     @Override
