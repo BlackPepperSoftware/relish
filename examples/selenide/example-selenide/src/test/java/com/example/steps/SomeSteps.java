@@ -1,6 +1,7 @@
 package com.example.steps;
 
 import com.example.components.AddTaskPage;
+import com.example.components.EditTaskPage;
 import com.example.components.TaskPage;
 
 import uk.co.blackpepper.relish.core.TableRow;
@@ -9,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import cucumber.api.PendingException;
+import cucumber.api.Transpose;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -17,6 +21,7 @@ public class SomeSteps
 {
     private TaskPage taskPage = new TaskPage();
     private AddTaskPage addTaskPage = new AddTaskPage();
+    private EditTaskPage editTaskPage = new EditTaskPage();
 
     @Given("^I am on the task list$")
     public void iAmOnTheTaskList()
@@ -33,7 +38,8 @@ public class SomeSteps
     @When("^I choose to add these tasks$")
     public void iChooseToAddThisTask(List<TableRow> taskDetails)
     {
-        for (TableRow task : taskDetails) {
+        for(TableRow task : taskDetails)
+        {
             taskPage.addButton().click();
             addTaskPage.set(task);
             addTaskPage.saveButton().click();
@@ -63,5 +69,13 @@ public class SomeSteps
     public void theDeleteButtonIsDisabled()
     {
         taskPage.deleteButton().assertDisabled();
+    }
+
+    @And("^I change the '([^']*)' task to$")
+    public void iChangeTheBuySomeMilkTaskTo(String name, @Transpose List<TableRow> task)
+    {
+        taskPage.taskTable().findFirst("name", name).getWidget("edit").click();
+        editTaskPage.set(task.get(0));
+        editTaskPage.saveButton().click();
     }
 }

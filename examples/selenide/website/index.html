@@ -68,6 +68,15 @@
           selectCell.appendChild(checkbox);
           taskRow.appendChild(selectCell);
 
+          var editCell = document.createElement("td");
+          var editButton = document.createElement("button");
+          editButton.innerText = "Edit";
+          editButton.onclick = function(i) {return function(){
+            window.location='edit.html?id=' + i;
+          }}(i);
+          editCell.appendChild(editButton);
+          taskRow.appendChild(editCell);
+
           listBody.appendChild(taskRow);
         }
         checkSelected();
@@ -83,6 +92,7 @@
     <tr>
         <th>Name</th>
         <th>Selected</th>
+        <th>Edit</th>
     </tr>
     </thead>
     <tbody id="listBody">

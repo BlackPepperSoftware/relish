@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit a task</title>
+    <script lang="javascript">
+      function getTasks() {
+        var taskString = localStorage.getItem("tasks");
+        var tasks = [];
+        if (taskString) {
+          tasks = JSON.parse(taskString);
+        }
+        return tasks;
+      }
+
+      function setTasks(tasks) {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+      }
+      var getQueryString = function ( field, url ) {
+        var href = url ? url : window.location.href;
+        var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
+        var string = reg.exec(href);
+        return string ? string[1] : null;
+      };
+      function load() {
+        var tasks = getTasks();
+        var taskId = parseInt(getQueryString("id"));
+        var task = tasks[taskId];
+        console.log('XXXXXX task', task, taskId);
+        document.getElementById("name").value = task.name;
+      }
+      function save() {
+        var tasks = getTasks();
+        var taskId = parseInt(getQueryString("id"));
+        tasks[taskId] = {name: document.getElementById('name').value};
+        setTasks(tasks);
+        window.setTimeout(function () {
+          window.location = "index.html";
+        }, 1000);
+      }
+    </script>
+</head>
+<body>
+<h1>Edit a task</h1>
+<form>
+    <label for="name">Name</label>
+    <input id="name" name="name">
+    <button onClick="save(); return false;" class="saveButton">Save</button>
+</form>
+<script>
+    load();
+</script>
+</body>
+</html>

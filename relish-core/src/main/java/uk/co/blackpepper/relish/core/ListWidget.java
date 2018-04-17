@@ -2,6 +2,7 @@ package uk.co.blackpepper.relish.core;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static uk.co.blackpepper.relish.core.TableRowMatchers.getableMatchesAll;
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
@@ -31,12 +32,15 @@ public abstract class ListWidget<T> extends Widget<T> {
 
     public abstract Widget<T> get(int i);
 
+    public abstract int length();
+
     public void matches(final List assertionValues) {
         attempt(new Runnable() {
 
             @Override
             public void run()
             {
+                assertEquals(length(), assertionValues.size());
                 for (int i = 0; i < assertionValues.size(); i++) {
                     Object assertionValue = assertionValues.get(i);
                     if (assertionValue instanceof TableRow) {
