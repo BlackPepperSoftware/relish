@@ -30,12 +30,14 @@ public class SomeSteps
         taskPage.taskTable().matches(new ArrayList<>());
     }
 
-    @When("^I choose to add this task$")
+    @When("^I choose to add these tasks$")
     public void iChooseToAddThisTask(List<TableRow> taskDetails)
     {
-        taskPage.addButton().click();
-        addTaskPage.set(taskDetails.get(0));
-        addTaskPage.saveButton().click();
+        for (TableRow task : taskDetails) {
+            taskPage.addButton().click();
+            addTaskPage.set(task);
+            addTaskPage.saveButton().click();
+        }
     }
 
     @Then("^I will see this on the list of tasks$")

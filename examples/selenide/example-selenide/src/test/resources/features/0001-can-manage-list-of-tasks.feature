@@ -9,7 +9,7 @@ Feature: A list of tasks can be managed by the application
 
   Scenario: I can add a task
     Given I am on the task list
-    When I choose to add this task
+    When I choose to add these tasks
       | Name           |
       | Buy some bread |
     Then I will see this on the list of tasks
@@ -19,14 +19,10 @@ Feature: A list of tasks can be managed by the application
   Scenario: Can delete tasks
     Given I am on the task list
     Then the delete button is disabled
-    When I choose to add this task
+    When I choose to add these tasks
       | Name           |
       | Buy some bread |
-    And I choose to add this task
-      | Name          |
-      | Buy some milk |
-    And I choose to add this task
-      | Name           |
+      | Buy some milk  |
       | Buy some water |
     And I will select these tasks
       | Name           | Selected |
