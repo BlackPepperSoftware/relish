@@ -12,9 +12,11 @@ Feature: A list of tasks can be managed by the application
     When I choose to add these tasks
       | Name           |
       | Buy some bread |
+      | Buy some milk  |
     Then I will see this on the list of tasks
       | Name           |
       | Buy some bread |
+      | Buy some milk  |
 
   Scenario: Can delete tasks
     Given I am on the task list
