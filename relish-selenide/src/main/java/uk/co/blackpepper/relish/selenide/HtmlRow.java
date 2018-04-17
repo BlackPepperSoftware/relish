@@ -56,8 +56,12 @@ public class HtmlRow extends SelenideWidget implements WidgetContainer
             throw new IllegalStateException("Not enough cells for '" + key + "'. Needed "
                 + headingPos + " but only had " + cells.size() + ". Cells = " + cells);
         }
-        SelenideElement rowElement = $(cells.get(headingPos));
-        return createWidgetFor(key, rowElement);
+        return createWidgetFor(key, $(cells.get(headingPos)));
+    }
+
+    public Widget getWidget(int column) {
+        String heading = (headings.size() > column) ? headings.get(column) : "" + column;
+        return createWidgetFor(heading, $(cells().get(column)));
     }
 
     private SelenideWidget createWidgetFor(String heading, SelenideElement rowElement)

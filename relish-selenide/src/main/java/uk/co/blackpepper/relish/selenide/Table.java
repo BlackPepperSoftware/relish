@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Selenide.$;
 import static java.util.stream.Collectors.toList;
@@ -52,7 +53,7 @@ public class Table extends ListWidget<SelenideElement>
     }
 
     @Override
-    public Widget<SelenideElement> get(int i)
+    public HtmlRow get(int i)
     {
         List<WebElement> rows = getRows();
 
@@ -81,7 +82,7 @@ public class Table extends ListWidget<SelenideElement>
         assertTrue("Cannot find heading '" + heading + "'", headingList.contains(heading));
         int len = length();
         for (int i = 0; i < len; i++) {
-            HtmlRow htmlRow = (HtmlRow) get(i);
+            HtmlRow htmlRow = get(i);
             if (value.equals(htmlRow.get(heading))) {
                 return htmlRow;
             }
@@ -91,8 +92,10 @@ public class Table extends ListWidget<SelenideElement>
 
     private String[] headings()
     {
-        String[] ths = get().findElements(By.tagName("th")).stream()
-            .map(e -> toGetter(e.getText())).collect(toList()).toArray(new String[]{});
+        List<WebElement> th = get().findElements(By.tagName("th"));
+        String[] ths = IntStream.range(0, th.size())
+            .mapToObj(i -> toGetter(th.get(i).getText().length() > 0 ? th.get(i).getText() : "" + i))
+            .collect(toList()).toArray(new String[]{});
         return ths;
     }
 

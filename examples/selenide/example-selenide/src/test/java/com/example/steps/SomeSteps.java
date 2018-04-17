@@ -36,9 +36,9 @@ public class SomeSteps
     }
 
     @When("^I choose to add these tasks$")
-    public void iChooseToAddThisTask(List<TableRow> taskDetails)
+    public void iChooseToAddThisTask(List<TableRow> tasks)
     {
-        for(TableRow task : taskDetails)
+        for(TableRow task : tasks)
         {
             taskPage.addButton().click();
             addTaskPage.set(task);
@@ -55,7 +55,7 @@ public class SomeSteps
     @When("^I will select these tasks$")
     public void iWillSelectTheseTasks(List<TableRow> tasks)
     {
-        taskPage.taskTable().matches(tasks.stream().map(t -> t.except("selected")).collect(Collectors.toList()));
+        taskPage.taskTable().matches(tasks.stream().map(t -> t.except("select")).collect(Collectors.toList()));
         taskPage.taskTable().set(tasks.stream().map(t -> t.except("name")).collect(Collectors.toList()));
     }
 
@@ -72,9 +72,9 @@ public class SomeSteps
     }
 
     @And("^I change the '([^']*)' task to$")
-    public void iChangeTheBuySomeMilkTaskTo(String name, @Transpose List<TableRow> task)
+    public void iChangeTheTaskTo(String name, @Transpose List<TableRow> task)
     {
-        taskPage.taskTable().findFirst("name", name).getWidget("edit").click();
+        taskPage.taskTable().findFirst("name", name).getWidget(2).click();
         editTaskPage.set(task.get(0));
         editTaskPage.saveButton().click();
     }

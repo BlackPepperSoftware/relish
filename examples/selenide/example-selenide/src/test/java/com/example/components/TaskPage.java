@@ -9,19 +9,23 @@ import uk.co.blackpepper.relish.selenide.Table;
 import uk.co.blackpepper.relish.selenide.Page;
 import uk.co.blackpepper.relish.selenide.SelenideWidget;
 
-public class TaskPage extends Page {
-    public TaskPage() {
+public class TaskPage extends Page
+{
+    public TaskPage()
+    {
         super("/index.html");
     }
 
-    public Table taskTable() {
+    public Table taskTable()
+    {
         return new Table(By.className("tasks"), this)
-            .withBuilder("selected", (tdCell) -> new Checkbox(tdCell.$("input"), this))
-            .withBuilder("edit", (tdCell) -> new SelenideWidget(tdCell.$("button"), this))
+            .withBuilder("select", (tdCell) -> new Checkbox(tdCell.$("input"), this))
+            .withBuilder("2", (tdCell) -> new SelenideWidget(tdCell.$("button"), this))
             ;
     }
 
-    public SelenideWidget addButton() {
+    public SelenideWidget addButton()
+    {
         return new SelenideWidget(By.className("addButton"), this);
     }
 

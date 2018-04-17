@@ -27,14 +27,14 @@ Feature: A list of tasks can be managed by the application
       | Buy some milk  |
       | Buy some water |
     And I will select these tasks
-      | Name           | Selected |
-      | Buy some bread | true     |
-      | Buy some milk  | false    |
-      | Buy some water | true     |
+      | Name           | Select |
+      | Buy some bread | true   |
+      | Buy some milk  | false  |
+      | Buy some water | true   |
     And I choose to delete the selected tasks
     Then I will see this on the list of tasks
-      | Name          |
-      | Buy some milk |
+      | Name          | Select |
+      | Buy some milk | false  |
 
   Scenario: Can edit a task
     Given I am on the task list
