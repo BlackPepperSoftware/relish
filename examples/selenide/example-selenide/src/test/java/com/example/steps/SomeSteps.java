@@ -71,7 +71,7 @@ public class SomeSteps
         taskPage.deleteButton().assertDisabled();
     }
 
-    @And("^I change the '([^']*)' task to$")
+    @When("^I change the '([^']*)' task to$")
     public void iChangeTheTaskTo(String name, @Transpose List<TableRow> task)
     {
         taskPage.taskTable().findFirst("name", name).getWidget(2).click();
