@@ -32,7 +32,7 @@ public class SomeSteps
     @Then("^the list of tasks will be empty$")
     public void theListOfTasksWillBeEmpty()
     {
-        taskPage.taskTable().matches(new ArrayList<>());
+        taskPage.taskTable().assertEmpty();
     }
 
     @When("^I choose to add these tasks$")

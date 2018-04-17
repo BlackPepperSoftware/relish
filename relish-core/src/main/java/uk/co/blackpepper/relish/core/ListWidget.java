@@ -53,6 +53,17 @@ public abstract class ListWidget<T> extends Widget<T> {
         }, 500, 10);
     }
 
+    public void assertEmpty() {
+        attempt(new Runnable() {
+
+            @Override
+            public void run()
+            {
+                assertEquals(length(), 0);
+            }
+        }, 500, 10);
+    }
+
     public void set(final List setValues) {
         attempt(new Runnable()
         {

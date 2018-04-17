@@ -16,7 +16,9 @@ public class TaskPage extends Page {
 
     public Table taskTable() {
         return new Table(By.className("tasks"), this)
-            .withBuilder("selected", (tdCell) -> new Checkbox(tdCell.$("input"), this));
+            .withBuilder("selected", (tdCell) -> new Checkbox(tdCell.$("input"), this))
+            .withBuilder("edit", (tdCell) -> new SelenideWidget(tdCell.$("button"), this))
+            ;
     }
 
     public SelenideWidget addButton() {

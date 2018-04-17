@@ -6,6 +6,7 @@ import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.WebDriverException;
 
 import cucumber.api.CucumberOptions;
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 
 import java.io.IOException;
@@ -22,12 +23,15 @@ public class Hooks {
         if (property == null) {
             Configuration.baseUrl = "http://localhost:8000";
         }
+    }
+
+    @After
+    public void after() throws IOException {
         clearBrowserCookies();
         try {
             clearBrowserLocalStorage();
         } catch(WebDriverException wde) {
             System.err.println("Cannot clear local storage. Non browser test?");
         }
-
     }
 }
