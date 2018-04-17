@@ -3,35 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <title>List of all tasks</title>
+    <script lang="javascript">
+      function getTasks() {
+        var taskString = localStorage.getItem("tasks");
+        var tasks = [];
+        if (taskString) {
+          tasks = JSON.parse(taskString);
+        }
+        return tasks;
+      }
+
+      function setTasks(tasks) {
+        localStorage.setItem("tasks", JSON.stringify(tasks));
+      }
+
+      function selectCount() {
+        var count = 0;
+        var inputs = document.getElementsByTagName('input');
+        for (var i = inputs.length - 1; i >= 0; i--) {
+          if (inputs[i].type === 'checkbox') {
+            if (inputs[i].checked) {
+              count++;
+            }
+          }
+        }
+        return count;
+      }
+
+      function deleteSelected() {
+        var tasks = getTasks();
+
+        var inputs = document.getElementsByTagName('input');
+        for (var i = inputs.length - 1; i >= 0; i--) {
+          if (inputs[i].type === 'checkbox') {
+            if (inputs[i].checked) {
+              tasks.splice(i, 1);
+            }
+          }
+        }
+        setTasks(tasks);
+        window.location.reload(false);
+      }
+
+      function checkSelected(evt) {
+        var disabled = (selectCount() === 0);
+        document.getElementsByClassName("deleteButton")[0].disabled = disabled;
+      }
+
+      function renderTaskRows() {
+        var tasks = getTasks();
+        for (var i = 0; i < tasks.length; i++) {
+          var task = tasks[i];
+          var taskRow = document.createElement("tr");
+
+          var nameCell = document.createElement("td");
+          nameCell.appendChild(document.createTextNode(task.name));
+          taskRow.appendChild(nameCell)
+
+          var selectCell = document.createElement("td");
+          var checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.id = "delete" + i;
+          checkbox.onclick = checkSelected;
+          selectCell.appendChild(checkbox);
+          taskRow.appendChild(selectCell);
+
+          listBody.appendChild(taskRow);
+        }
+        checkSelected();
+      }
+    </script>
 </head>
 <body>
 <h1>List of all tasks</h1>
 <button class="addButton" onclick="window.location='add.html'">Add task</button>
+<button class="deleteButton" onclick="deleteSelected()">Delete tasks</button>
 <table class="tasks" border="1">
-<thead>
-<tr><th>Name</th></tr>
-</thead>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Selected</th>
+    </tr>
+    </thead>
     <tbody id="listBody">
 
     </tbody>
 </table>
 <script lang="javascript">
-    var listBody = document.getElementById("listBody");
-    var taskString = localStorage.getItem("tasks");
-    var tasks = [];
-    if (taskString) {
-        tasks = JSON.parse(taskString);
-    }
-    window.setTimeout(function () {
-      for (var i = 0; i < tasks.length; i++) {
-        var task = tasks[i];
-        var taskRow = document.createElement("tr");
-        var nameCell = document.createElement("td");
-        nameCell.appendChild(document.createTextNode(task.name));
-        listBody.appendChild(taskRow);
-        taskRow.appendChild(nameCell)
-      }
-    }, 1000);
+  window.setTimeout(renderTaskRows, 1000);
 </script>
 </body>
 </html>

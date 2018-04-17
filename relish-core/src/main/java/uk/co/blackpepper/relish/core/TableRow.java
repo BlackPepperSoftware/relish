@@ -2,6 +2,7 @@ package uk.co.blackpepper.relish.core;
 
 import cucumber.deps.com.thoughtworks.xstream.annotations.XStreamConverter;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -105,7 +106,10 @@ public class TableRow implements Getable {
     }
 
     private String replaceExpressions(String value) {
-        return value;
+        if (value == null) {
+            return null;
+        }
+        return value.replaceAll("\\<today\\>", new SimpleDateFormat("dd/MM/yyyy").format(new Date()));
     }
 }
 

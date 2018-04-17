@@ -1,76 +1,79 @@
 package uk.co.blackpepper.relish.selenide;
 
-import uk.co.blackpepper.relish.core.*;
 import com.codeborne.selenide.SelenideElement;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
-import java.util.ArrayList;
+import uk.co.blackpepper.relish.core.Component;
+import uk.co.blackpepper.relish.core.ListWidget;
+import uk.co.blackpepper.relish.core.Widget;
+
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
-import static uk.co.blackpepper.relish.core.TestUtils.attempt;
+import static com.codeborne.selenide.Selenide.$;
 import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
-public class Table extends SelenideWidget {
-    public Table(By selector, Component parent) {
-        super(selector, parent);
+public class Table extends ListWidget<SelenideElement>
+{
+    private Map<String,Function<SelenideElement,SelenideWidget>> builders = new HashMap<>();
+
+    public Table(By selector, Component parent)
+    {
+        super(new SelenideWidget(selector, parent), parent);
     }
 
-    public Table(SelenideElement element, Component parent) {
-        super(element, parent);
+    public Table(SelenideElement element, Component parent)
+    {
+        super(new SelenideWidget(element, parent), parent);
     }
 
-    public String[] headings() {
+    public Table withBuilder(String heading, Function<SelenideElement,SelenideWidget> factory) {
+        Table clone = new Table(get(), getParent());
+        HashMap<String, Function<SelenideElement, SelenideWidget>> newBuilders = new HashMap<>(builders);
+        newBuilders.put(heading, factory);
+        clone.builders = newBuilders;
+        return clone;
+    }
+
+    public Table withBuilders(Map<String,Function<SelenideElement,SelenideWidget>> builders) {
+        Table clone = new Table(get(), getParent());
+        clone.builders = builders;
+        return clone;
+    }
+
+    @Override
+    public Widget<SelenideElement> get(int i)
+    {
+        List<WebElement> rows = get().findElements(By.tagName("tr")).stream()
+            // Ignore rows without TD elements
+            .filter(e -> !e.findElements(By.tagName("td")).isEmpty())
+            .collect(toList());
+
+        if(rows.size() < i + 1)
+        {
+            throw new IllegalStateException("Not enough rows to read row " + i);
+        }
+        HtmlRow htmlRow1 = new HtmlRow($(rows.get(i)), this, Arrays.asList(headings()));
+        HtmlRow htmlRow = htmlRow1.withBuilders(builders);
+        return htmlRow;
+    }
+
+    private String[] headings()
+    {
         String[] ths = get().findElements(By.tagName("th")).stream()
-                .map(e -> toGetter(e.getText())).collect(toList()).toArray(new String[]{});
+            .map(e -> toGetter(e.getText())).collect(toList()).toArray(new String[]{});
         return ths;
     }
 
-    /**
-     * Get the data from the table as a list of getables
-     *
-     * This should be useful when checking the table against the contents of a table in a feature.
-     *
-     * @return list of getable objects
-     */
-    public List<Getable> data() {
-        assertVisible();
-        String[] headings = headings();
-        List<List<String>> rowsWithTdStrings = get().findElements(By.tagName("tr")).stream()
-                // Ignore rows without TD elements
-                .filter(e -> !e.findElements(By.tagName("td")).isEmpty())
-                // Then turn each row of TDs into a list of their string-contents
-                .map(row -> row.findElements(By.tagName("td")).stream().map(e -> e.getText()).collect(toList()))
-                .collect(toList());
-
-        List<Getable> result = new ArrayList<>();
-        for (List<String> rowWithTdStrings : rowsWithTdStrings) {
-            GetableMap aResult = new GetableMap();
-            assertEquals("Different number of headings and columns",
-                    headings.length, rowWithTdStrings.size());
-            for (int i = 0; i < headings.length; i++) {
-                aResult.put(headings[i], rowWithTdStrings.get(i));
-            }
-            result.add(aResult);
-        }
-        return result;
-    }
-
-    public void matches(List<TableRow> sheetTable) {
-        attempt(() -> {
-            List<Getable> screenRows = data();
-            int i = 0;
-            for (TableRow assertRow : sheetTable) {
-                assertThat(screenRows.get(i++), TableRowMatchers.getableMatchesAll(assertRow));
-            }
-        }, 500, 3);
-    }
-
-    private String toGetter(String s) {
+    private String toGetter(String s)
+    {
         String join = String.join("", Arrays.stream(s.replaceAll("/", " ").split("\\s"))
-                .map(s1 -> s1.substring(0, 1).toUpperCase() + s1.substring(1)).collect(toList()));
+            .map(s1 -> s1.substring(0, 1).toUpperCase() + s1.substring(1)).collect(toList()));
         return join.substring(0, 1).toLowerCase() + join.substring(1);
     }
 }

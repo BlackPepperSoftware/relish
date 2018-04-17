@@ -4,6 +4,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertThat;
 import static uk.co.blackpepper.relish.core.TableRowMatchers.getableMatchesAll;
+import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
 /**
  * The type Widget.
@@ -30,15 +31,40 @@ public abstract class ListWidget<T> extends Widget<T> {
 
     public abstract Widget<T> get(int i);
 
-    public void matches(List assertionValues) {
-        for (int i = 0; i < assertionValues.size(); i++) {
-            Object assertionValue = assertionValues.get(i);
-            if (assertionValue instanceof TableRow) {
-                assertThat(get(i), getableMatchesAll((TableRow)assertionValue));
-            } else {
-                get(i).matches(assertionValue.toString());
+    public void matches(final List assertionValues) {
+        attempt(new Runnable() {
+
+            @Override
+            public void run()
+            {
+                for (int i = 0; i < assertionValues.size(); i++) {
+                    Object assertionValue = assertionValues.get(i);
+                    if (assertionValue instanceof TableRow) {
+                        assertThat(get(i), getableMatchesAll((TableRow)assertionValue));
+                    } else {
+                        get(i).matches(assertionValue.toString());
+                    }
+                }
             }
-        }
+        }, 500, 10);
+    }
+
+    public void set(final List setValues) {
+        attempt(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                for (int i = 0; i < setValues.size(); i++) {
+                    Object newValue = setValues.get(i);
+                    if (newValue instanceof TableRow) {
+                        get(i).set((TableRow)newValue);
+                    } else {
+                        get(i).setStringValue(newValue.toString());
+                    }
+                }
+            }
+        }, 500, 10);
     }
 
     @Override

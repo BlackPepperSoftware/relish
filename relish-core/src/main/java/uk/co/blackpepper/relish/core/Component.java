@@ -60,7 +60,12 @@ public abstract class Component implements Getable {
      */
     public Component set(TableRow tableRow) {
         for (Map.Entry<String, String> entry : tableRow.entrySet()) {
-            Object result = evaluateMethod(entry.getKey());
+            Object result = null;
+            if (this instanceof WidgetContainer) {
+                result = ((WidgetContainer)this).getWidget(entry.getKey());
+            } else {
+                result = evaluateMethod(entry.getKey());
+            }
             if (result instanceof Component) {
                 ((Component) result).setStringValue(entry.getValue());
             } else {
