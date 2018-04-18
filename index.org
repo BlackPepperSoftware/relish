@@ -1,4 +1,3 @@
-#+TITLE: Relish
-#+SUBTITLE: Component based acceptance testing
+#+TITLE: Relish - Component based acceptance testing
 
 * Relish testing
