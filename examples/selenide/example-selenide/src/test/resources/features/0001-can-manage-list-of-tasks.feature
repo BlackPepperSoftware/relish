@@ -38,7 +38,6 @@ Feature: A list of tasks can be managed by the application
 
   Scenario: Can edit a task
     Given I am on the task list
-    Then the delete button is disabled
     When I choose to add these tasks
       | Name           |
       | Buy some bread |

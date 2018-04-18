@@ -6,13 +6,10 @@ import com.example.components.TaskPage;
 
 import uk.co.blackpepper.relish.core.TableRow;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cucumber.api.PendingException;
 import cucumber.api.Transpose;
-import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
