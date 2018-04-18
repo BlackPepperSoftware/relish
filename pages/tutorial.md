@@ -5,8 +5,19 @@
 In this tutorial, we'll go through the steps required to create a Relish test suite for a simple task management application.
 
 1. [Creating the project](./tutorial-1.html)
-2. [Create out tests](./tutorial-2.html)
+A walkthrough of creating the tasks tutorial testing project.
+
+2. [Create our tests](./tutorial-2.html)
+Create a feature file for a user story.
+
 3. [Relish components](./tutorial-3.html)
+Starting our first proper scenario using Relish components.
+
 4. [Adding tasks](./tutorial-4.html)
+Sending data to a form and asserting the contents of a table.
+
 5. [Deleting tasks](./tutorial-5.html)
+Adding interactive components to a table, and working with `TableRow` objects.
+
 6. [Editing tasks](./tutorial-6.html)
+Handling table columns without headings and filtering rows.
