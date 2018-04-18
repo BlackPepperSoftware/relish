@@ -195,7 +195,7 @@ Here we're using Cucumber feature-tables to specify the details of the tasks we 
 
 We'll create each task with a second page containing a form that will allow us to enter the details of the task. When we save that task we'll return back to the front page of the application, where we should see our new task listed.
 
-![img](images/add-design.png)
+![img](../images/add-design.png)
 
 So we'll a button on the front page for adding a task:
 
