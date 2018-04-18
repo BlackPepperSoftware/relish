@@ -1,3 +1,10 @@
 #+TITLE: Relish - Component based acceptance testing
 
-* Relish testing
+* What is Relish?
+
+Relish is a Java library that is designed to reduce the amount of code needed to create UI/acceptance tests. Although it doesn't require it, Relish is intended to be used with a BDD tool like Cucumber to automate a user-interface.
+
+There are currently two flavours of Relish:
+
+- =relish-selenide= For testing web applications
+- =relish-espresso= For testing Android applications
