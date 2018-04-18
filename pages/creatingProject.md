@@ -1,14 +1,3 @@
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. Create a configuration class</a></li>
-<li><a href="#sec-2">2. Set up some hooks</a></li>
-<li><a href="#sec-3">3. Create a steps-file</a></li>
-</ul>
-</div>
-</div>
-
 ![img](../images/Relish.png)
 
 Relish is in the very early stages of development, so some of these details are likely to change. You'll find all of the code for this worked example in the `examples/selenide/example-selenide` folder in the Git repo.

@@ -1,26 +1,3 @@
-<div id="table-of-contents">
-<h2>Table of Contents</h2>
-<div id="text-table-of-contents">
-<ul>
-<li><a href="#sec-1">1. Introduction</a></li>
-<li><a href="#sec-2">2. Creating a project</a></li>
-<li><a href="#sec-3">3. Create our tests</a></li>
-<li><a href="#sec-4">4. Introducing Relish components</a>
-<ul>
-<li><a href="#sec-4-1">4.1. Launching the front page</a></li>
-<li><a href="#sec-4-2">4.2. Checking that the table is empty</a></li>
-</ul>
-</li>
-<li><a href="#sec-5">5. A second scenario: adding tasks</a>
-<ul>
-<li><a href="#sec-5-1">5.1. Implementing the 'When I choose to add these tasks' step</a></li>
-<li><a href="#sec-5-2">5.2. Implementing the 'Then I will see this on the list of tasks' step</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-
 ![img](../images/Relish.png)
 
 # Introduction
