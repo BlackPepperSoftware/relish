@@ -1,4 +1,4 @@
-<img style="float: left;" src="../images/Relish.png" width="75" height="100">
+<img style="float: left; margin-right: 16px;" src="../images/Relish.png" width="37" height="50">
 
 # Relish Tutorial
 
