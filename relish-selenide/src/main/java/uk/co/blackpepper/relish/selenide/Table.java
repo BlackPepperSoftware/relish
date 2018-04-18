@@ -38,7 +38,7 @@ public class Table extends ListWidget<SelenideElement>
         super(new SelenideWidget(element, parent), parent);
     }
 
-    public Table withBuilder(String heading, Function<SelenideElement,SelenideWidget> factory) {
+    public Table withCellComponent(String heading, Function<SelenideElement,SelenideWidget> factory) {
         Table clone = new Table(get(), getParent());
         HashMap<String, Function<SelenideElement, SelenideWidget>> newBuilders = new HashMap<>(builders);
         newBuilders.put(heading, factory);

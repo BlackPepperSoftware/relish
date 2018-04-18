@@ -1,7 +1,5 @@
 package com.example.components;
 
-import com.codeborne.selenide.SelenideElement;
-
 import org.openqa.selenium.By;
 
 import uk.co.blackpepper.relish.selenide.Checkbox;
@@ -19,8 +17,8 @@ public class TaskPage extends Page
     public Table taskTable()
     {
         return new Table(By.className("tasks"), this)
-            .withBuilder("select", (tdCell) -> new Checkbox(tdCell.$("input"), this))
-            .withBuilder("2", (tdCell) -> new SelenideWidget(tdCell.$("button"), this))
+            .withCellComponent("select", (tdCell) -> new Checkbox(tdCell.$("input"), this))
+            .withCellComponent("2", (tdCell) -> new SelenideWidget(tdCell.$("button"), this))
             ;
     }
 
