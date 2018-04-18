@@ -1,4 +1,4 @@
-![img](../images/Relish.png)
+<img style="float: left; margin-right: 16px;" src="../images/Relish.png" width="28" height="38">
 
 Relish is in the very early stages of development, so some of these details are likely to change. You'll find all of the code for this worked example in the `examples/selenide/example-selenide` folder in the Git repo.
 

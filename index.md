@@ -1,4 +1,4 @@
-![img](./images/Relish.png)
+<img style="float: left; margin-right: 16px;" src="../images/Relish.png" width="28" height="38">
 
 # What is Relish?
 
