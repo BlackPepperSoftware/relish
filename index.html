@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
 <title>Relish - Component based acceptance testing</title>
-<!-- 2018-04-18 Wed 08:42 -->
+<!-- 2018-04-18 Wed 11:10 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta  name="generator" content="Org-mode" />
 <meta  name="author" content="David Griffiths" />
@@ -143,6 +143,30 @@ for the JavaScript code in this tag.
 <div id="text-table-of-contents">
 <ul>
 <li><a href="#sec-1">1. What is Relish?</a></li>
+<li><a href="#sec-2">2. Worked example: a task application</a>
+<ul>
+<li><a href="#sec-2-1">2.1. Creating a project</a>
+<ul>
+<li><a href="#sec-2-1-1">2.1.1. Create a configuration class</a></li>
+<li><a href="#sec-2-1-2">2.1.2. Set up some hooks</a></li>
+<li><a href="#sec-2-1-3">2.1.3. Create a steps-file</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-2">2.2. Create our tests</a></li>
+<li><a href="#sec-2-3">2.3. Introducing Relish components</a>
+<ul>
+<li><a href="#sec-2-3-1">2.3.1. Launching the front page</a></li>
+<li><a href="#sec-2-3-2">2.3.2. Checking that the table is empty</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-4">2.4. A second scenario: adding tasks</a>
+<ul>
+<li><a href="#sec-2-4-1">2.4.1. Implementing the 'When I choose to add these tasks' step</a></li>
+<li><a href="#sec-2-4-2">2.4.2. Implementing the 'Then I will see this on the list of tasks' step</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -171,10 +195,738 @@ There are currently two flavours of Relish:
 </ul>
 </div>
 </div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Worked example: a task application</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Creating a project</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Relish is in the very early stages of development, so some of these details are likely to change. You'll find all of the code for this worked example in the <code>examples/selenide/example-selenide</code> folder in the Git repo.
+</p>
+
+<p>
+We're going to walk through the steps of creating a simple web application to manage and create tasks. The app itself is very simplistic and stores all of its data locally, but it will be complex enough to demonstrate how to use Relish with pretty much any web application.
+</p>
+
+<p>
+Create a project for your test code. In a real application you would probably want to create this as some sort of checked-in module of the application itself. That way, the code and the tests can be committed together.
+</p>
+
+<p>
+We will include a dependency to the Relish code, and we'll also add a few other test libraries that will allow us to use Relish with Cucumber. This is the <code>build.gradle</code> file we'll be using here:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-gradle">apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'info.cukes', name: 'cucumber-java', version: '1.2.5'
+    testCompile group: 'info.cukes', name: 'cucumber-junit', version: '1.2.5'
+    testCompile group: 'com.codeborne', name: 'selenide', version: '4.8'
+    testCompile group: 'org.hamcrest', name:'java-hamcrest', version: '2.0.0.0'
+    compile project(path: ':relish-selenide') # Replace this with a reference to however you got Relish
+}
+</pre>
+</div>
+
+<p>
+We'll make the assumption that you'll have a file structure like this:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-text">PROJECT_DIRECTORY +
+                  |
+                  +- build.gradle
+                  |
+                  +- src/
+                     |
+                     +- test/
+                     |  |
+                     |  +- java/
+                     |     |
+                     |     +- com/example/
+                     |        |
+                     |        +- &lt;Java code goes here&gt;
+                     |
+                     +- resources/
+                        |
+                        +- features/
+                           |
+                           +- &lt;Cucumber feature tests go here&gt;
+</pre>
+</div>
+</div>
+
+<div id="outline-container-sec-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1"><span class="section-number-4">2.1.1</span> Create a configuration class</h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+We'll need to tell Cucumber about it's environment, and we'll do this with a class called <code>TestRunner</code>:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FA9E18;">package</span> com.<span style="color: #FF518C;">example</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">cucumber</span>.<span style="color: #FF518C;">api</span>.<span style="color: #FFEF79;">CucumberOptions</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">cucumber</span>.<span style="color: #FF518C;">api</span>.<span style="color: #FF518C;">junit</span>.<span style="color: #FFEF79;">Cucumber</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">org</span>.<span style="color: #FF518C;">junit</span>.<span style="color: #FF518C;">runner</span>.<span style="color: #FFEF79;">RunWith</span>;
+
+<span style="color: #FF518C;">@RunWith</span>(Cucumber.<span style="color: #FA9E18;">class</span>)
+<span style="color: #FF518C;">@CucumberOptions</span>(
+        features= <span style="color: #42D915;">"classpath:features"</span>,
+        glue={<span style="color: #42D915;">"com.example.steps"</span>}
+)
+<span style="color: #FA9E18;">public</span> <span style="color: #FA9E18;">class</span> <span style="color: #FFEF79;">TestRunner</span> {
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-1-2" class="outline-4">
+<h4 id="sec-2-1-2"><span class="section-number-4">2.1.2</span> Set up some hooks</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+<i>Hooks</i> are part of the glue that allows Cucumber to work. They can before and after each test scenario, and they are typically used to initialize the UI (for example, by saying how to use the web browser) and to clear up after a test has finished. This is the <code>Hooks.java</code> that we'll be using:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FA9E18;">package</span> com.example.<span style="color: #FF518C;">steps</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">com</span>.<span style="color: #FF518C;">codeborne</span>.<span style="color: #FF518C;">selenide</span>.<span style="color: #FFEF79;">Configuration</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">org</span>.<span style="color: #FF518C;">openqa</span>.<span style="color: #FF518C;">selenium</span>.<span style="color: #FFEF79;">WebDriverException</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">java</span>.<span style="color: #FF518C;">io</span>.<span style="color: #FFEF79;">IOException</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">cucumber</span>.<span style="color: #FF518C;">api</span>.<span style="color: #FFEF79;">CucumberOptions</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">cucumber</span>.<span style="color: #FF518C;">api</span>.<span style="color: #FF518C;">java</span>.<span style="color: #FFEF79;">After</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">cucumber</span>.<span style="color: #FF518C;">api</span>.<span style="color: #FF518C;">java</span>.<span style="color: #FFEF79;">Before</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FA9E18;">static</span> <span style="color: #FF518C;">com</span>.<span style="color: #FF518C;">codeborne</span>.<span style="color: #FF518C;">selenide</span>.Selenide.<span style="color: #FFEF79;">clearBrowserCookies</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FA9E18;">static</span> <span style="color: #FF518C;">com</span>.<span style="color: #FF518C;">codeborne</span>.<span style="color: #FF518C;">selenide</span>.Selenide.<span style="color: #FFEF79;">clearBrowserLocalStorage</span>;
+
+<span style="color: #FF518C;">@CucumberOptions</span>(features = <span style="color: #42D915;">"features"</span>)
+<span style="color: #FA9E18;">public</span> <span style="color: #FA9E18;">class</span> <span style="color: #FFEF79;">Hooks</span> {
+    <span style="color: #FF518C;">@Before</span>
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">before</span>() <span style="color: #FA9E18;">throws</span> <span style="color: #FFEF79;">IOException</span> {
+        Configuration.browser = <span style="color: #42D915;">"chrome"</span>;
+        <span style="color: #FFEF79;">String</span> <span style="color: #CCCCCC;">property</span> = System.getProperty(<span style="color: #42D915;">"selenide.baseUrl"</span>);
+        <span style="color: #FA9E18;">if</span> (property == <span style="color: #FF518C;">null</span>) {
+            Configuration.baseUrl = <span style="color: #42D915;">"http://localhost:8000"</span>;
+        }
+    }
+
+    <span style="color: #FF518C;">@After</span>
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">after</span>() <span style="color: #FA9E18;">throws</span> <span style="color: #FFEF79;">IOException</span> {
+        clearBrowserCookies();
+        <span style="color: #FA9E18;">try</span> {
+            clearBrowserLocalStorage();
+        } <span style="color: #FA9E18;">catch</span>(<span style="color: #FFEF79;">WebDriverException</span> <span style="color: #CCCCCC;">wde</span>) {
+            System.err.println(<span style="color: #42D915;">"Cannot clear local storage. Non browser test?"</span>);
+        }
+    }
+}
+</pre>
+</div>
+
+<p>
+This just says that we're expecting our application to be running at <code>http://localhost:8000</code>, that we'll use Chrome for our tests, and that we'll clear out the cookies and cache at the end of the test. This is important for our trivial example app, because we'll storing all of the data it creates in cookies.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-1-3" class="outline-4">
+<h4 id="sec-2-1-3"><span class="section-number-4">2.1.3</span> Create a steps-file</h4>
+<div class="outline-text-4" id="text-2-1-3">
+<p>
+Steps are the lines of code that tell Cucumber how to run your test. We're going to create a single steps-file called <code>SomeSteps.java</code>:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FA9E18;">package</span> com.example.<span style="color: #FF518C;">steps</span>;
+
+<span style="color: #FA9E18;">public</span> <span style="color: #FA9E18;">class</span> <span style="color: #FFEF79;">SomeSteps</span>
+{
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Create our tests</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+We're going to create an application that will allow a user to create, read, update and delete tasks. Let's say this is our first user story:
+</p>
+
+<blockquote>
+<p>
+<b>Story 1: A list of tasks can be managed by the application</b>
+</p>
+
+<p>
+As a user
+</p>
+
+<p>
+I want to be able to create, read, update and delete tasks
+</p>
+
+<p>
+So that I can manage my time
+</p>
+</blockquote>
+
+<p>
+We'll create a new Cucumber <code>feature</code> file in the <code>src/resources/features/</code> folder called <code>0001-can-manage-list-of-tasks.feature</code>
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-feature"><span style="color: #FA9E18;">Feature:</span><span style="color: #FFEF79;"> A list of tasks can be managed by the application</span>
+  As a user
+  I want to be able to create, read, update and delete tasks
+  So that I can manage my time
+</pre>
+</div>
+
+<p>
+Now we'll add our first scenario&#x2013;a test that checks that when the app is first started, that there are no tasks recorded. When we write the application, we'll expect the main page to look something like this:
+</p>
+
+<p>
+<i>images/notasks.png</i>
+</p>
+
+<p>
+We can write a scenario to check that this is true:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-feature"><span style="color: #FA9E18;">Feature:</span><span style="color: #FFEF79;"> A list of tasks can be managed by the application</span>
+  As a user
+  I want to be able to create, read, update and delete tasks
+  So that I can manage my time
+
+<span style="color: #FA9E18;">  Scenario:</span><span style="color: #FFDD00;"> Initially the list of tasks is empty</span>
+<span style="color: #FA9E18;">    Given</span> I am on the task list
+<span style="color: #FA9E18;">    Then</span> the list of tasks will be empty
+</pre>
+</div>
+
+<p>
+This scenario contains two steps:
+</p>
+
+<p>
+We'll need to write methods for each of these in the <code>SomeSteps.java</code> file that will automate the application for us.
+</p>
+
+<p>
+And this is where Relish finally makes an appearance&#x2026;
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Introducing Relish components</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+What we <i>could</i> do at this point, is write a couple of methods that will use Selenide or Selenium code to automate the browser. And the code to launch the app and go to the task list page, then check that a table is empty probably won't be that long. But the trouble is that we are likely to interact with the same components and pages multiple times as we create more and more scenarios.
+</p>
+
+<p>
+And that's where Relish helps. Relish allows you to quickly build testing components that represent the various elements of your UI, and allows you to interact with them in a simpler and more re-usable way.
+</p>
+</div>
+
+<div id="outline-container-sec-2-3-1" class="outline-4">
+<h4 id="sec-2-3-1"><span class="section-number-4">2.3.1</span> Launching the front page</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+Let's begin with the first step: 'Given I am on the task list'. We'll create a Relish <i>Page</i> class that represents the main page of our app:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FA9E18;">package</span> com.example.<span style="color: #FF518C;">components</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">uk</span>.<span style="color: #FF518C;">co</span>.<span style="color: #FF518C;">blackpepper</span>.<span style="color: #FF518C;">relish</span>.<span style="color: #FF518C;">selenide</span>.<span style="color: #FFEF79;">Page</span>;
+
+<span style="color: #FA9E18;">public</span> <span style="color: #FA9E18;">class</span> <span style="color: #FFEF79;">TaskPage</span> <span style="color: #FA9E18;">extends</span> <span style="color: #FFEF79;">Page</span>
+{
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFDD00;">TaskPage</span>()
+    {
+        <span style="color: #FA9E18;">super</span>(<span style="color: #42D915;">"/index.html"</span>);
+    }
+}
+</pre>
+</div>
+
+<p>
+This <code>TaskPage</code> is a testing facade that represents the front page of our application. Any kind of interaction we make with the <code>index.html</code> page, we'll make through this object. We'll need to construct a <code>TaskPage</code> object in our <code>SomeSteps.java</code> file, which we can then use in the 'Given I am on the task list' step:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FA9E18;">package</span> com.example.<span style="color: #FF518C;">steps</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">com</span>.<span style="color: #FF518C;">example</span>.<span style="color: #FF518C;">components</span>.<span style="color: #FFEF79;">TaskPage</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">cucumber</span>.<span style="color: #FF518C;">api</span>.<span style="color: #FF518C;">java</span>.<span style="color: #FF518C;">en</span>.<span style="color: #FFEF79;">Given</span>;
+
+<span style="color: #FA9E18;">public</span> <span style="color: #FA9E18;">class</span> <span style="color: #FFEF79;">SomeSteps</span>
+{
+    <span style="color: #FA9E18;">private</span> <span style="color: #FFEF79;">TaskPage</span> <span style="color: #CCCCCC;">taskPage</span> = <span style="color: #FA9E18;">new</span> <span style="color: #FFEF79;">TaskPage</span>();
+
+    <span style="color: #FF518C;">@Given</span>(<span style="color: #42D915;">"^I am on the task list$"</span>)
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">iAmOnTheTaskList</span>()
+    {
+        taskPage.launch();
+    }
+}
+</pre>
+</div>
+
+<p>
+Because the <code>TaskPage</code> extends the Relish <code>Page</code> class, it automatically knows how to contact the web driver and launch the correct URL.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-3-2" class="outline-4">
+<h4 id="sec-2-3-2"><span class="section-number-4">2.3.2</span> Checking that the table is empty</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+Now we need to check that the table on the front page is empty. Again, we could just write some Selenide code in the step method in <code>SomeSteps</code>, but instead we will simply tell the <code>TaskPage</code> that it will contain a table for the tasks:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FA9E18;">package</span> com.example.<span style="color: #FF518C;">components</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">org</span>.<span style="color: #FF518C;">openqa</span>.<span style="color: #FF518C;">selenium</span>.<span style="color: #FFEF79;">By</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">uk</span>.<span style="color: #FF518C;">co</span>.<span style="color: #FF518C;">blackpepper</span>.<span style="color: #FF518C;">relish</span>.<span style="color: #FF518C;">selenide</span>.<span style="color: #FFEF79;">Table</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">uk</span>.<span style="color: #FF518C;">co</span>.<span style="color: #FF518C;">blackpepper</span>.<span style="color: #FF518C;">relish</span>.<span style="color: #FF518C;">selenide</span>.<span style="color: #FFEF79;">Page</span>;
+
+<span style="color: #FA9E18;">public</span> <span style="color: #FA9E18;">class</span> <span style="color: #FFEF79;">TaskPage</span> <span style="color: #FA9E18;">extends</span> <span style="color: #FFEF79;">Page</span>
+{
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFDD00;">TaskPage</span>()
+    {
+        <span style="color: #FA9E18;">super</span>(<span style="color: #42D915;">"/index.html"</span>);
+    }
+
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">Table</span> <span style="color: #FFDD00;">taskTable</span>()
+    {
+        <span style="color: #FA9E18;">return</span> <span style="color: #FA9E18;">new</span> <span style="color: #FFEF79;">Table</span>(By.className(<span style="color: #42D915;">"tasks"</span>), <span style="color: #FA9E18;">this</span>);
+    }
+}
+</pre>
+</div>
+
+<p>
+The <code>taskTable()</code> method of the page returns a Relish object that represents the <code>Table</code> object that will be on the front screen. When we construct Relish web components, we need to provide two pieces of information:
+</p>
+
+<p>
+Now that we have a <code>taskTable()</code> for our page, how do we use it? Let's add the implementation for our second step:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FA9E18;">package</span> com.example.<span style="color: #FF518C;">steps</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">com</span>.<span style="color: #FF518C;">example</span>.<span style="color: #FF518C;">components</span>.<span style="color: #FFEF79;">TaskPage</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">cucumber</span>.<span style="color: #FF518C;">api</span>.<span style="color: #FF518C;">java</span>.<span style="color: #FF518C;">en</span>.<span style="color: #FFEF79;">Given</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">cucumber</span>.<span style="color: #FF518C;">api</span>.<span style="color: #FF518C;">java</span>.<span style="color: #FF518C;">en</span>.<span style="color: #FFEF79;">Then</span>;
+
+<span style="color: #FA9E18;">public</span> <span style="color: #FA9E18;">class</span> <span style="color: #FFEF79;">SomeSteps</span>
+{
+    <span style="color: #FA9E18;">private</span> <span style="color: #FFEF79;">TaskPage</span> <span style="color: #CCCCCC;">taskPage</span> = <span style="color: #FA9E18;">new</span> <span style="color: #FFEF79;">TaskPage</span>();
+
+    <span style="color: #FF518C;">@Given</span>(<span style="color: #42D915;">"^I am on the task list$"</span>)
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">iAmOnTheTaskList</span>()
+    {
+        taskPage.launch();
+    }
+
+    <span style="color: #FF518C;">@Then</span>(<span style="color: #42D915;">"^the list of tasks will be empty$"</span>)
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">theListOfTasksWillBeEmpty</span>()
+    {
+        taskPage.taskTable().assertEmpty();
+    }
+}
+</pre>
+</div>
+
+<p>
+The <code>Table</code> object will look at the number of rows in the table that contain actual data (&lt;td&gt; cells) and checks that none are visible.
+</p>
+
+<p>
+And that's it for our first scenario. Relish hides away a lot of the details of the low-level interaction with the browser. Most the application-specific test code we've written has been in the <code>TaskPage</code> class, defining the expected functional structure of the page. 
+</p>
+
+<p>
+Now we've spent a few minutes creating this test, we can go an implement the initial web page.
+</p>
+
+
+<div class="figure">
+<p><img src="./images/notasks.png" alt="notasks.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> A second scenario: adding tasks</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+Our first scenario was obviously very simplistic. Now let's create a second, which requires a little more interactivity:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-feature"><span style="color: #FA9E18;">Scenario:</span><span style="color: #FFDD00;"> I can add a task</span>
+<span style="color: #FA9E18;">  Given</span> I am on the task list
+<span style="color: #FA9E18;">  When</span> I choose to add these tasks
+<span style="color: #87cefa;">    | Name           |</span>
+<span style="color: #87cefa;">    | Buy some bread |</span>
+<span style="color: #87cefa;">    | Buy some milk  |</span>
+<span style="color: #FA9E18;">  Then</span> I will see this on the list of tasks
+<span style="color: #87cefa;">    | Name           |</span>
+<span style="color: #87cefa;">    | Buy some bread |</span>
+<span style="color: #87cefa;">    | Buy some milk  |</span>
+</pre>
+</div>
+
+<p>
+Here we're using Cucumber feature-tables to specify the details of the tasks we going to add, and expect to the see on the application. Our scenario will begin by launching the app in the same way, but then will create a list of tasks, and check that they all appear on the front page as expected. 
+</p>
+
+<p>
+We'll create each task with a second page containing a form that will allow us to enter the details of the task. When we save that task we'll return back to the front page of the application, where we should see our new task listed.
+</p>
+
+
+<div class="figure">
+<p><img src="images/add-design.png" alt="add-design.png" />
+</p>
+</div>
+
+<p>
+So we'll a button on the front page for adding a task:
+</p>
+
+
+<div class="figure">
+<p><img src="./images/addtaskbutton.png" alt="addtaskbutton.png" />
+</p>
+</div>
+
+<p>
+And we'll need a second page with a simple form for entering a task, with a "Save" button:
+</p>
+
+
+<div class="figure">
+<p><img src="./images/addformpage.png" alt="addformpage.png" />
+</p>
+</div>
+
+<p>
+When we click on the 'Add task' button on the front page, it will launch the 'Add task page', where we can fill out the details for the task, click 'Save' and return to the front page, where our new task will appear.
+</p>
+</div>
+
+<div id="outline-container-sec-2-4-1" class="outline-4">
+<h4 id="sec-2-4-1"><span class="section-number-4">2.4.1</span> Implementing the 'When I choose to add these tasks' step</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<p>
+We'll first modify our <code>TaskPage</code> class, adding in a testing component for the 'Add task' button:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FA9E18;">package</span> com.example.<span style="color: #FF518C;">components</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">org</span>.<span style="color: #FF518C;">openqa</span>.<span style="color: #FF518C;">selenium</span>.<span style="color: #FFEF79;">By</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">uk</span>.<span style="color: #FF518C;">co</span>.<span style="color: #FF518C;">blackpepper</span>.<span style="color: #FF518C;">relish</span>.<span style="color: #FF518C;">selenide</span>.<span style="color: #FFEF79;">Table</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">uk</span>.<span style="color: #FF518C;">co</span>.<span style="color: #FF518C;">blackpepper</span>.<span style="color: #FF518C;">relish</span>.<span style="color: #FF518C;">selenide</span>.<span style="color: #FFEF79;">Page</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">uk</span>.<span style="color: #FF518C;">co</span>.<span style="color: #FF518C;">blackpepper</span>.<span style="color: #FF518C;">relish</span>.<span style="color: #FF518C;">selenide</span>.<span style="color: #FFEF79;">SelenideWidget</span>;
+
+<span style="color: #FA9E18;">public</span> <span style="color: #FA9E18;">class</span> <span style="color: #FFEF79;">TaskPage</span> <span style="color: #FA9E18;">extends</span> <span style="color: #FFEF79;">Page</span>
+{
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFDD00;">TaskPage</span>()
+    {
+        <span style="color: #FA9E18;">super</span>(<span style="color: #42D915;">"/index.html"</span>);
+    }
+
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">Table</span> <span style="color: #FFDD00;">taskTable</span>()
+    {
+        <span style="color: #FA9E18;">return</span> <span style="color: #FA9E18;">new</span> <span style="color: #FFEF79;">Table</span>(By.className(<span style="color: #42D915;">"tasks"</span>), <span style="color: #FA9E18;">this</span>);
+    }
+
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">SelenideWidget</span> <span style="color: #FFDD00;">addButton</span>()
+    {
+        <span style="color: #FA9E18;">return</span> <span style="color: #FA9E18;">new</span> <span style="color: #FFEF79;">SelenideWidget</span>(By.className(<span style="color: #42D915;">"addButton"</span>), <span style="color: #FA9E18;">this</span>);
+    }
+}
+</pre>
+</div>
+
+<p>
+Our new <code>addButton()</code> method returns <code>SelenideWidget</code> Relish object. This is a generic component that represent some part of a web page that we can look at and click. 
+</p>
+
+<p>
+We'll also need to create a class for our second page: the one for creating a new task. We'll this <code>AddTaskPage</code>:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FA9E18;">package</span> com.example.<span style="color: #FF518C;">components</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">uk</span>.<span style="color: #FF518C;">co</span>.<span style="color: #FF518C;">blackpepper</span>.<span style="color: #FF518C;">relish</span>.<span style="color: #FF518C;">selenide</span>.<span style="color: #FFEF79;">InputText</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">uk</span>.<span style="color: #FF518C;">co</span>.<span style="color: #FF518C;">blackpepper</span>.<span style="color: #FF518C;">relish</span>.<span style="color: #FF518C;">selenide</span>.<span style="color: #FFEF79;">Page</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">uk</span>.<span style="color: #FF518C;">co</span>.<span style="color: #FF518C;">blackpepper</span>.<span style="color: #FF518C;">relish</span>.<span style="color: #FF518C;">selenide</span>.<span style="color: #FFEF79;">SelenideWidget</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">uk</span>.<span style="color: #FF518C;">co</span>.<span style="color: #FF518C;">blackpepper</span>.<span style="color: #FF518C;">relish</span>.<span style="color: #FF518C;">selenide</span>.<span style="color: #FFEF79;">Table</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">org</span>.<span style="color: #FF518C;">openqa</span>.<span style="color: #FF518C;">selenium</span>.<span style="color: #FFEF79;">By</span>;
+
+<span style="color: #FA9E18;">public</span> <span style="color: #FA9E18;">class</span> <span style="color: #FFEF79;">AddTaskPage</span> <span style="color: #FA9E18;">extends</span> <span style="color: #FFEF79;">Page</span> {
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFDD00;">AddTaskPage</span>() {
+        <span style="color: #FA9E18;">super</span>(<span style="color: #42D915;">"/add.html"</span>);
+    }
+
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">InputText</span> <span style="color: #FFDD00;">name</span>() {
+        <span style="color: #FA9E18;">return</span> <span style="color: #FA9E18;">new</span> <span style="color: #FFEF79;">InputText</span>(By.id(<span style="color: #42D915;">"name"</span>), <span style="color: #FA9E18;">this</span>);
+    }
+
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">SelenideWidget</span> <span style="color: #FFDD00;">saveButton</span>() {
+        <span style="color: #FA9E18;">return</span> <span style="color: #FA9E18;">new</span> <span style="color: #FFEF79;">SelenideWidget</span>(By.className(<span style="color: #42D915;">"saveButton"</span>), <span style="color: #FA9E18;">this</span>);
+    }
+}
+</pre>
+</div>
+
+<p>
+This class will be used to interact with the 'Add task page', which it will expect to find at path <code>/add.html</code>. It will include a button with the class name "saveButton" (which we represent by a <code>SelenideWidget</code> object), and also an <code>InputText</code> component with id "name". <code>InputText</code> is another Relish component for interacting with text fields.
+</p>
+
+<p>
+Now we that have our page objects structured in the way that we want, we now need to write a 'When I choose to add these tasks' step. Remember: this is what the step looks like in our scenario:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-feature"><span style="color: #FA9E18;">When</span> I choose to add these tasks
+<span style="color: #87cefa;">  | Name           |</span>
+<span style="color: #87cefa;">  | Buy some bread |</span>
+<span style="color: #87cefa;">  | Buy some milk  |</span>
+</pre>
+</div>
+
+<p>
+This step will need to be passed the contents of the data-table containing the details of our new tasks. We normally do this in a Relish test by specifying the table as a list of Relish <code>TableRow</code> objects:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FF518C;">@When</span>(<span style="color: #42D915;">"^I choose to add these tasks$"</span>)
+<span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">iChooseToAddTheseTasks</span>(<span style="color: #FFEF79;">List</span>&lt;<span style="color: #FFEF79;">TableRow</span>&gt; <span style="color: #CCCCCC;">tasks</span>)
+{
+....
+}
+</pre>
+</div>
+
+<p>
+A <code>TableRow</code> is very similar to a <code>Map&lt;String,String&gt;</code> and it's designed specifically to interact with Relish components. You'll see how shortly.
+</p>
+
+<p>
+Now that we've begun to create our step, we'll need to fill out the code. We'll loop through each of the <code>TableRow</code> objects from the table, and for each one:
+</p>
+
+<p>
+This is how this is done in Relish:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FF518C;">@When</span>(<span style="color: #42D915;">"^I choose to add these tasks$"</span>)
+<span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">iChooseToAddTheseTasks</span>(<span style="color: #FFEF79;">List</span>&lt;<span style="color: #FFEF79;">TableRow</span>&gt; <span style="color: #CCCCCC;">tasks</span>)
+{
+    <span style="color: #FA9E18;">for</span>(<span style="color: #FFEF79;">TableRow</span> <span style="color: #CCCCCC;">task</span> : tasks)
+    {
+        taskPage.addButton().click();
+        addTaskPage.set(task);
+        addTaskPage.saveButton().click();
+    }
+}
+</pre>
+</div>
+
+<p>
+Notice that we're assuming here we've created a <code>addTaskPage</code> object higher up in the class.
+</p>
+
+<p>
+The <code>addButton()</code> and <code>saveButton()</code> components (like all <code>selenide-relish</code> widgets) have <code>click()</code> methods. The interesting line is <code>addTaskPage.set(task)</code>.
+</p>
+
+<p>
+The <code>set()</code> method accepts a <code>TableRow</code> object and uses it to update all of the sub-components whose names match the columns in the <code>TableRow</code>. So because our table looks like this:
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">Buy some bread</td>
+</tr>
+
+<tr>
+<td class="left">Buy some milk</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+The <code>set()</code> method will convert the (only) column "Name" into camel-case, and look for a <code>name()</code> method on the <code>AddTaskPage</code> object. In our case, this <code>name()</code> method returns an <code>InputText</code> field, and Relish will tell the the <code>InputText</code> component to type in the strings "Buy some bread" and "Buy some milk" on each of the occasions that it visits the page.
+</p>
+
+<p>
+If there had been multiple columns in the feature table, Relish would have looked for a matching component for each of them, and entered the data into each of the fields in the form.
+</p>
+
+<p>
+This is where we start to benefit from the testing components built in to Relish: a lot of the boring "glue" code that takes data from a Cucumber scenario and passes it through to Selenide is done for us.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-4-2" class="outline-4">
+<h4 id="sec-2-4-2"><span class="section-number-4">2.4.2</span> Implementing the 'Then I will see this on the list of tasks' step</h4>
+<div class="outline-text-4" id="text-2-4-2">
+<p>
+Now we need to check that the tasks we entered in the previous step now appear on the list of tasks on the main screen:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-feature"><span style="color: #FA9E18;">Then</span> I will see this on the list of tasks
+<span style="color: #87cefa;">  | Name           |</span>
+<span style="color: #87cefa;">  | Buy some bread |</span>
+<span style="color: #87cefa;">  | Buy some milk  |</span>
+</pre>
+</div>
+
+<p>
+This is actually remarkably easy to implement, because we already have all the components in place in the <code>Page</code> objects:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FF518C;">@Then</span>(<span style="color: #42D915;">"^I will see this on the list of tasks$"</span>)
+<span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">iWillSeeThisOnTheListOfTasks</span>(<span style="color: #FFEF79;">List</span>&lt;<span style="color: #FFEF79;">TableRow</span>&gt; <span style="color: #CCCCCC;">tasks</span>)
+{
+    taskPage.taskTable().matches(tasks);
+}
+</pre>
+</div>
+
+<p>
+This uses the <code>matches()</code> method of the <code>taskTable()</code> to assert that the table contains rows that match the detail of each <code>TableRow</code>. The <code>Table</code> object will handle all of the details of finding the column headings and matching them to the column names in the table. 
+</p>
+
+<p>
+That completes the scenario. This is the current state of our <code>SomeSteps</code> class:
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #FA9E18;">package</span> com.example.<span style="color: #FF518C;">steps</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">com</span>.<span style="color: #FF518C;">example</span>.<span style="color: #FF518C;">components</span>.<span style="color: #FFEF79;">AddTaskPage</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">com</span>.<span style="color: #FF518C;">example</span>.<span style="color: #FF518C;">components</span>.<span style="color: #FFEF79;">TaskPage</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">uk</span>.<span style="color: #FF518C;">co</span>.<span style="color: #FF518C;">blackpepper</span>.<span style="color: #FF518C;">relish</span>.<span style="color: #FF518C;">core</span>.<span style="color: #FFEF79;">TableRow</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">java</span>.<span style="color: #FF518C;">util</span>.<span style="color: #FFEF79;">List</span>;
+
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">cucumber</span>.<span style="color: #FF518C;">api</span>.<span style="color: #FF518C;">java</span>.<span style="color: #FF518C;">en</span>.<span style="color: #FFEF79;">Given</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">cucumber</span>.<span style="color: #FF518C;">api</span>.<span style="color: #FF518C;">java</span>.<span style="color: #FF518C;">en</span>.<span style="color: #FFEF79;">Then</span>;
+<span style="color: #FA9E18;">import</span> <span style="color: #FF518C;">cucumber</span>.<span style="color: #FF518C;">api</span>.<span style="color: #FF518C;">java</span>.<span style="color: #FF518C;">en</span>.<span style="color: #FFEF79;">When</span>;
+
+<span style="color: #FA9E18;">public</span> <span style="color: #FA9E18;">class</span> <span style="color: #FFEF79;">SomeSteps</span>
+{
+    <span style="color: #FA9E18;">private</span> <span style="color: #FFEF79;">TaskPage</span> <span style="color: #CCCCCC;">taskPage</span> = <span style="color: #FA9E18;">new</span> <span style="color: #FFEF79;">TaskPage</span>();
+    <span style="color: #FA9E18;">private</span> <span style="color: #FFEF79;">AddTaskPage</span> <span style="color: #CCCCCC;">addTaskPage</span> = <span style="color: #FA9E18;">new</span> <span style="color: #FFEF79;">AddTaskPage</span>();
+
+    <span style="color: #FF518C;">@Given</span>(<span style="color: #42D915;">"^I am on the task list$"</span>)
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">iAmOnTheTaskList</span>()
+    {
+        taskPage.launch();
+    }
+
+    <span style="color: #FF518C;">@Then</span>(<span style="color: #42D915;">"^the list of tasks will be empty$"</span>)
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">theListOfTasksWillBeEmpty</span>()
+    {
+        taskPage.taskTable().assertEmpty();
+    }
+
+    <span style="color: #FF518C;">@When</span>(<span style="color: #42D915;">"^I choose to add these tasks$"</span>)
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">iChooseToAddTheseTasks</span>(<span style="color: #FFEF79;">List</span>&lt;<span style="color: #FFEF79;">TableRow</span>&gt; <span style="color: #CCCCCC;">tasks</span>)
+    {
+        <span style="color: #FA9E18;">for</span>(<span style="color: #FFEF79;">TableRow</span> <span style="color: #CCCCCC;">task</span> : tasks)
+        {
+            taskPage.addButton().click();
+            addTaskPage.set(task);
+            addTaskPage.saveButton().click();
+        }
+    }
+
+    <span style="color: #FF518C;">@Then</span>(<span style="color: #42D915;">"^I will see this on the list of tasks$"</span>)
+    <span style="color: #FA9E18;">public</span> <span style="color: #FFEF79;">void</span> <span style="color: #FFDD00;">iWillSeeThisOnTheListOfTasks</span>(<span style="color: #FFEF79;">List</span>&lt;<span style="color: #FFEF79;">TableRow</span>&gt; <span style="color: #CCCCCC;">tasks</span>)
+    {
+        taskPage.taskTable().matches(tasks);
+    }
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: David Griffiths</p>
-<p class="date">Created: 2018-04-18 Wed 08:42</p>
+<p class="date">Created: 2018-04-18 Wed 11:10</p>
 <p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>

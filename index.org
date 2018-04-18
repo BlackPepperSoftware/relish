@@ -11,3 +11,542 @@ There are currently two flavours of Relish:
 
 - =relish-selenide= For testing web applications
 - =relish-espresso= For testing Android applications
+
+* Worked example: a task application
+
+** Creating a project
+
+Relish is in the very early stages of development, so some of these details are likely to change. You'll find all of the code for this worked example in the =examples/selenide/example-selenide= folder in the Git repo.
+
+We're going to walk through the steps of creating a simple web application to manage and create tasks. The app itself is very simplistic and stores all of its data locally, but it will be complex enough to demonstrate how to use Relish with pretty much any web application.
+
+Create a project for your test code. In a real application you would probably want to create this as some sort of checked-in module of the application itself. That way, the code and the tests can be committed together.
+
+We will include a dependency to the Relish code, and we'll also add a few other test libraries that will allow us to use Relish with Cucumber. This is the =build.gradle= file we'll be using here:
+
+#+BEGIN_SRC gradle
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'info.cukes', name: 'cucumber-java', version: '1.2.5'
+    testCompile group: 'info.cukes', name: 'cucumber-junit', version: '1.2.5'
+    testCompile group: 'com.codeborne', name: 'selenide', version: '4.8'
+    testCompile group: 'org.hamcrest', name:'java-hamcrest', version: '2.0.0.0'
+    compile project(path: ':relish-selenide') # Replace this with a reference to however you got Relish
+}
+#+END_SRC
+
+We'll make the assumption that you'll have a file structure like this:
+
+#+BEGIN_SRC text
+PROJECT_DIRECTORY +
+                  |
+                  +- build.gradle
+                  |
+                  +- src/
+                     |
+                     +- test/
+                     |  |
+                     |  +- java/
+                     |     |
+                     |     +- com/example/
+                     |        |
+                     |        +- <Java code goes here>
+                     |
+                     +- resources/
+                        |
+                        +- features/
+                           |
+                           +- <Cucumber feature tests go here>
+#+END_SRC
+
+*** Create a configuration class
+
+We'll need to tell Cucumber about it's environment, and we'll do this with a class called =TestRunner=:
+
+#+BEGIN_SRC java
+package com.example;
+
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+import org.junit.runner.RunWith;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        features= "classpath:features",
+        glue={"com.example.steps"}
+)
+public class TestRunner {
+}
+#+END_SRC
+
+*** Set up some hooks
+
+/Hooks/ are part of the glue that allows Cucumber to work. They can before and after each test scenario, and they are typically used to initialize the UI (for example, by saying how to use the web browser) and to clear up after a test has finished. This is the =Hooks.java= that we'll be using:
+
+#+BEGIN_SRC java
+  package com.example.steps;
+
+  import com.codeborne.selenide.Configuration;
+
+  import org.openqa.selenium.WebDriverException;
+
+  import java.io.IOException;
+
+  import cucumber.api.CucumberOptions;
+  import cucumber.api.java.After;
+  import cucumber.api.java.Before;
+
+  import static com.codeborne.selenide.Selenide.clearBrowserCookies;
+  import static com.codeborne.selenide.Selenide.clearBrowserLocalStorage;
+
+  @CucumberOptions(features = "features")
+  public class Hooks {
+      @Before
+      public void before() throws IOException {
+          Configuration.browser = "chrome";
+          String property = System.getProperty("selenide.baseUrl");
+          if (property == null) {
+              Configuration.baseUrl = "http://localhost:8000";
+          }
+      }
+
+      @After
+      public void after() throws IOException {
+          clearBrowserCookies();
+          try {
+              clearBrowserLocalStorage();
+          } catch(WebDriverException wde) {
+              System.err.println("Cannot clear local storage. Non browser test?");
+          }
+      }
+  }
+#+END_SRC
+
+This just says that we're expecting our application to be running at =http://localhost:8000=, that we'll use Chrome for our tests, and that we'll clear out the cookies and cache at the end of the test. This is important for our trivial example app, because we'll storing all of the data it creates in cookies.
+
+*** Create a steps-file
+
+Steps are the lines of code that tell Cucumber how to run your test. We're going to create a single steps-file called =SomeSteps.java=:
+
+#+BEGIN_SRC java
+  package com.example.steps;
+
+  public class SomeSteps
+  {
+  }
+#+END_SRC
+
+** Create our tests
+
+We're going to create an application that will allow a user to create, read, update and delete tasks. Let's say this is our first user story:
+
+#+BEGIN_QUOTE
+*Story 1: A list of tasks can be managed by the application*
+
+As a user
+
+I want to be able to create, read, update and delete tasks
+
+So that I can manage my time
+#+END_QUOTE
+
+We'll create a new Cucumber =feature= file in the =src/resources/features/= folder called =0001-can-manage-list-of-tasks.feature=
+
+#+BEGIN_SRC feature
+Feature: A list of tasks can be managed by the application
+  As a user
+  I want to be able to create, read, update and delete tasks
+  So that I can manage my time
+#+END_SRC
+
+Now we'll add our first scenario--a test that checks that when the app is first started, that there are no tasks recorded. When we write the application, we'll expect the main page to look something like this:
+
+[[images/notasks.png]]
+
+We can write a scenario to check that this is true:
+
+#+BEGIN_SRC feature
+Feature: A list of tasks can be managed by the application
+  As a user
+  I want to be able to create, read, update and delete tasks
+  So that I can manage my time
+
+  Scenario: Initially the list of tasks is empty
+    Given I am on the task list
+    Then the list of tasks will be empty
+#+END_SRC
+
+This scenario contains two steps:
+
+# Given I am on the task list
+# Then the list of tasks will be empty
+
+We'll need to write methods for each of these in the =SomeSteps.java= file that will automate the application for us.
+
+And this is where Relish finally makes an appearance...
+
+** Introducing Relish components
+
+What we /could/ do at this point, is write a couple of methods that will use Selenide or Selenium code to automate the browser. And the code to launch the app and go to the task list page, then check that a table is empty probably won't be that long. But the trouble is that we are likely to interact with the same components and pages multiple times as we create more and more scenarios.
+
+And that's where Relish helps. Relish allows you to quickly build testing components that represent the various elements of your UI, and allows you to interact with them in a simpler and more re-usable way.
+
+*** Launching the front page
+
+Let's begin with the first step: 'Given I am on the task list'. We'll create a Relish /Page/ class that represents the main page of our app:
+
+#+BEGIN_SRC java
+  package com.example.components;
+
+  import uk.co.blackpepper.relish.selenide.Page;
+
+  public class TaskPage extends Page
+  {
+      public TaskPage()
+      {
+          super("/index.html");
+      }
+  }
+#+END_SRC
+
+This =TaskPage= is a testing facade that represents the front page of our application. Any kind of interaction we make with the =index.html= page, we'll make through this object. We'll need to construct a =TaskPage= object in our =SomeSteps.java= file, which we can then use in the 'Given I am on the task list' step:
+
+#+BEGIN_SRC java
+  package com.example.steps;
+
+  import com.example.components.TaskPage;
+
+  import cucumber.api.java.en.Given;
+
+  public class SomeSteps
+  {
+      private TaskPage taskPage = new TaskPage();
+
+      @Given("^I am on the task list$")
+      public void iAmOnTheTaskList()
+      {
+          taskPage.launch();
+      }
+  }
+#+END_SRC
+
+Because the =TaskPage= extends the Relish =Page= class, it automatically knows how to contact the web driver and launch the correct URL.
+
+*** Checking that the table is empty
+
+Now we need to check that the table on the front page is empty. Again, we could just write some Selenide code in the step method in =SomeSteps=, but instead we will simply tell the =TaskPage= that it will contain a table for the tasks:
+
+#+BEGIN_SRC java
+  package com.example.components;
+
+  import org.openqa.selenium.By;
+
+  import uk.co.blackpepper.relish.selenide.Table;
+  import uk.co.blackpepper.relish.selenide.Page;
+
+  public class TaskPage extends Page
+  {
+      public TaskPage()
+      {
+          super("/index.html");
+      }
+
+      public Table taskTable()
+      {
+          return new Table(By.className("tasks"), this);
+      }
+  }
+#+END_SRC
+
+The =taskTable()= method of the page returns a Relish object that represents the =Table= object that will be on the front screen. When we construct Relish web components, we need to provide two pieces of information:
+
+# Either a =SelenideElement= representing the component, or (as here) a Selenium =By= selector that will find the element
+# A Relish parent component. Here the parent of the table, is the page object.
+
+Now that we have a =taskTable()= for our page, how do we use it? Let's add the implementation for our second step:
+
+#+BEGIN_SRC java
+  package com.example.steps;
+
+  import com.example.components.TaskPage;
+
+  import cucumber.api.java.en.Given;
+  import cucumber.api.java.en.Then;
+
+  public class SomeSteps
+  {
+      private TaskPage taskPage = new TaskPage();
+
+      @Given("^I am on the task list$")
+      public void iAmOnTheTaskList()
+      {
+          taskPage.launch();
+      }
+
+      @Then("^the list of tasks will be empty$")
+      public void theListOfTasksWillBeEmpty()
+      {
+          taskPage.taskTable().assertEmpty();
+      }
+  }
+
+#+END_SRC
+
+The =Table= object will look at the number of rows in the table that contain actual data (<td> cells) and checks that none are visible.
+
+And that's it for our first scenario. Relish hides away a lot of the details of the low-level interaction with the browser. Most the application-specific test code we've written has been in the =TaskPage= class, defining the expected functional structure of the page. 
+
+Now we've spent a few minutes creating this test, we can go an implement the initial web page.
+
+[[./images/notasks.png]]
+
+** A second scenario: adding tasks
+
+Our first scenario was obviously very simplistic. Now let's create a second, which requires a little more interactivity:
+
+#+BEGIN_SRC feature
+  Scenario: I can add a task
+    Given I am on the task list
+    When I choose to add these tasks
+      | Name           |
+      | Buy some bread |
+      | Buy some milk  |
+    Then I will see this on the list of tasks
+      | Name           |
+      | Buy some bread |
+      | Buy some milk  |
+#+END_SRC
+
+Here we're using Cucumber feature-tables to specify the details of the tasks we going to add, and expect to the see on the application. Our scenario will begin by launching the app in the same way, but then will create a list of tasks, and check that they all appear on the front page as expected. 
+
+We'll create each task with a second page containing a form that will allow us to enter the details of the task. When we save that task we'll return back to the front page of the application, where we should see our new task listed.
+
+#+BEGIN_SRC ditaa :file images/add-design.png
+        Task page                           Add task page
+     +-----------------------+            +---------------+
+     |                       |  Launches  |               |
+     | New button -----------+----------->| New task form |
+     |                       |            |               |
+     |  Task table           |            |               |
+     |                       |            |               |
+     |                       |            | Save button   |
+     |                       |            |       |       |
+     +-----------------------+            +-------+-------+
+                ^                                 |
+                |        Return to Tasks page     |
+                +---------------------------------+
+#+END_SRC
+
+So we'll a button on the front page for adding a task:
+
+[[./images/addtaskbutton.png]]
+
+And we'll need a second page with a simple form for entering a task, with a "Save" button:
+
+[[./images/addformpage.png]]
+
+When we click on the 'Add task' button on the front page, it will launch the 'Add task page', where we can fill out the details for the task, click 'Save' and return to the front page, where our new task will appear.
+
+*** Implementing the 'When I choose to add these tasks' step
+
+We'll first modify our =TaskPage= class, adding in a testing component for the 'Add task' button:
+
+#+BEGIN_SRC java
+  package com.example.components;
+
+  import org.openqa.selenium.By;
+
+  import uk.co.blackpepper.relish.selenide.Table;
+  import uk.co.blackpepper.relish.selenide.Page;
+  import uk.co.blackpepper.relish.selenide.SelenideWidget;
+
+  public class TaskPage extends Page
+  {
+      public TaskPage()
+      {
+          super("/index.html");
+      }
+
+      public Table taskTable()
+      {
+          return new Table(By.className("tasks"), this);
+      }
+
+      public SelenideWidget addButton()
+      {
+          return new SelenideWidget(By.className("addButton"), this);
+      }
+  }
+#+END_SRC
+
+Our new =addButton()= method returns =SelenideWidget= Relish object. This is a generic component that represent some part of a web page that we can look at and click. 
+
+We'll also need to create a class for our second page: the one for creating a new task. We'll this =AddTaskPage=:
+
+#+BEGIN_SRC java
+  package com.example.components;
+
+  import uk.co.blackpepper.relish.selenide.InputText;
+  import uk.co.blackpepper.relish.selenide.Page;
+  import uk.co.blackpepper.relish.selenide.SelenideWidget;
+  import uk.co.blackpepper.relish.selenide.Table;
+  import org.openqa.selenium.By;
+
+  public class AddTaskPage extends Page {
+      public AddTaskPage() {
+          super("/add.html");
+      }
+
+      public InputText name() {
+          return new InputText(By.id("name"), this);
+      }
+
+      public SelenideWidget saveButton() {
+          return new SelenideWidget(By.className("saveButton"), this);
+      }
+  }
+#+END_SRC
+
+This class will be used to interact with the 'Add task page', which it will expect to find at path =/add.html=. It will include a button with the class name "saveButton" (which we represent by a =SelenideWidget= object), and also an =InputText= component with id "name". =InputText= is another Relish component for interacting with text fields.
+
+Now we that have our page objects structured in the way that we want, we now need to write a 'When I choose to add these tasks' step. Remember: this is what the step looks like in our scenario:
+
+#+BEGIN_SRC feature
+    When I choose to add these tasks
+      | Name           |
+      | Buy some bread |
+      | Buy some milk  |
+#+END_SRC
+
+This step will need to be passed the contents of the data-table containing the details of our new tasks. We normally do this in a Relish test by specifying the table as a list of Relish =TableRow= objects:
+
+#+BEGIN_SRC java
+  @When("^I choose to add these tasks$")
+  public void iChooseToAddTheseTasks(List<TableRow> tasks)
+  {
+  ....
+  }
+#+END_SRC
+
+A =TableRow= is very similar to a =Map<String,String>= and it's designed specifically to interact with Relish components. You'll see how shortly.
+
+Now that we've begun to create our step, we'll need to fill out the code. We'll loop through each of the =TableRow= objects from the table, and for each one:
+
+# Click on the 'Add task' button on the front page
+# Fill out 'Add task' form on the 'Add task' page
+# Then click 'Save' to return to the front page
+
+This is how this is done in Relish:
+
+#+BEGIN_SRC java
+    @When("^I choose to add these tasks$")
+    public void iChooseToAddTheseTasks(List<TableRow> tasks)
+    {
+        for(TableRow task : tasks)
+        {
+            taskPage.addButton().click();
+            addTaskPage.set(task);
+            addTaskPage.saveButton().click();
+        }
+    }
+#+END_SRC
+
+Notice that we're assuming here we've created a =addTaskPage= object higher up in the class.
+
+The =addButton()= and =saveButton()= components (like all =selenide-relish= widgets) have =click()= methods. The interesting line is =addTaskPage.set(task)=.
+
+The =set()= method accepts a =TableRow= object and uses it to update all of the sub-components whose names match the columns in the =TableRow=. So because our table looks like this:
+
+| Name           |
+|----------------|
+| Buy some bread |
+| Buy some milk  |
+
+The =set()= method will convert the (only) column "Name" into camel-case, and look for a =name()= method on the =AddTaskPage= object. In our case, this =name()= method returns an =InputText= field, and Relish will tell the the =InputText= component to type in the strings "Buy some bread" and "Buy some milk" on each of the occasions that it visits the page.
+
+If there had been multiple columns in the feature table, Relish would have looked for a matching component for each of them, and entered the data into each of the fields in the form.
+
+This is where we start to benefit from the testing components built in to Relish: a lot of the boring "glue" code that takes data from a Cucumber scenario and passes it through to Selenide is done for us.
+
+*** Implementing the 'Then I will see this on the list of tasks' step
+
+Now we need to check that the tasks we entered in the previous step now appear on the list of tasks on the main screen:
+
+#+BEGIN_SRC feature
+    Then I will see this on the list of tasks
+      | Name           |
+      | Buy some bread |
+      | Buy some milk  |
+#+END_SRC
+
+This is actually remarkably easy to implement, because we already have all the components in place in the =Page= objects:
+
+#+BEGIN_SRC java
+    @Then("^I will see this on the list of tasks$")
+    public void iWillSeeThisOnTheListOfTasks(List<TableRow> tasks)
+    {
+        taskPage.taskTable().matches(tasks);
+    }
+#+END_SRC
+
+This uses the =matches()= method of the =taskTable()= to assert that the table contains rows that match the detail of each =TableRow=. The =Table= object will handle all of the details of finding the column headings and matching them to the column names in the table. 
+
+That completes the scenario. This is the current state of our =SomeSteps= class:
+
+#+BEGIN_SRC java
+  package com.example.steps;
+
+  import com.example.components.AddTaskPage;
+  import com.example.components.TaskPage;
+
+  import uk.co.blackpepper.relish.core.TableRow;
+
+  import java.util.List;
+
+  import cucumber.api.java.en.Given;
+  import cucumber.api.java.en.Then;
+  import cucumber.api.java.en.When;
+
+  public class SomeSteps
+  {
+      private TaskPage taskPage = new TaskPage();
+      private AddTaskPage addTaskPage = new AddTaskPage();
+
+      @Given("^I am on the task list$")
+      public void iAmOnTheTaskList()
+      {
+          taskPage.launch();
+      }
+
+      @Then("^the list of tasks will be empty$")
+      public void theListOfTasksWillBeEmpty()
+      {
+          taskPage.taskTable().assertEmpty();
+      }
+
+      @When("^I choose to add these tasks$")
+      public void iChooseToAddTheseTasks(List<TableRow> tasks)
+      {
+          for(TableRow task : tasks)
+          {
+              taskPage.addButton().click();
+              addTaskPage.set(task);
+              addTaskPage.saveButton().click();
+          }
+      }
+
+      @Then("^I will see this on the list of tasks$")
+      public void iWillSeeThisOnTheListOfTasks(List<TableRow> tasks)
+      {
+          taskPage.taskTable().matches(tasks);
+      }
+  }
+#+END_SRC

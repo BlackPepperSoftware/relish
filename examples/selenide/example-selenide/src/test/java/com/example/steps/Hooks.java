@@ -1,15 +1,14 @@
 package com.example.steps;
 
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.WebDriverRunner;
 
 import org.openqa.selenium.WebDriverException;
+
+import java.io.IOException;
 
 import cucumber.api.CucumberOptions;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
-
-import java.io.IOException;
 
 import static com.codeborne.selenide.Selenide.clearBrowserCookies;
 import static com.codeborne.selenide.Selenide.clearBrowserLocalStorage;

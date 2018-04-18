@@ -36,7 +36,7 @@ public class SomeSteps
     }
 
     @When("^I choose to add these tasks$")
-    public void iChooseToAddThisTask(List<TableRow> tasks)
+    public void iChooseToAddTheseTasks(List<TableRow> tasks)
     {
         for(TableRow task : tasks)
         {
