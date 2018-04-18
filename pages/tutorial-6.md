@@ -2,6 +2,8 @@
 
 <h1 style="margin-top: -16px">Tutorial 6: Editing tasks</h1>
 
+&lt; [Deleting tasks](./tutorial-5.html) | ^ [Tutorial](./tutorial.html)
+
 Which brings us to the final scenario for this feature: editing tasks
 
     Scenario: Can edit a task
@@ -156,6 +158,4 @@ Adding this to a full implementation of the step, brings us to this version of t
     }
 
 
-[Previous - Deleting tasks](./tutorial-5.html)
-
-[Up - Tutorial](./tutorial.html)
+&lt; [Deleting tasks](./tutorial-5.html) | ^ [Tutorial](./tutorial.html)

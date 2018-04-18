@@ -2,6 +2,8 @@
 
 <h1 style="margin-top: -16px">Tutorial 3: Relish components</h1>
 
+&lt; [Creating our tests](./tutorial-2.html) | ^ [Tutorial](./tutorial.html) | [Adding tasks](./tutorial-4.html) &gt;
+
 What we *could* do at this point, is write a couple of methods that will use Selenide or Selenium code to automate the browser. And the code to launch the app and go to the task list page, then check that a table is empty probably won't be that long. But the trouble is that we are likely to interact with the same components and pages multiple times as we create more and more scenarios.
 
 And that's where Relish helps. Relish allows you to quickly build testing components that represent the various elements of your UI, and allows you to interact with them in a simpler and more re-usable way.
@@ -104,8 +106,4 @@ Now we've spent a few minutes creating this test, we can go an implement the ini
 
 ![img](../images/notasks.png)
 
-[Previous - Creating our tests](./tutorial-2.html)
-
-[Up - Tutorial](./tutorial.html)
-
-[Next - Adding tasks](./tutorial-4.html)
+&lt; [Creating our tests](./tutorial-2.html) | ^ [Tutorial](./tutorial.html) | [Adding tasks](./tutorial-4.html) &gt;

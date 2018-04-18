@@ -2,6 +2,8 @@
 
 <h1 style="margin-top: -16px">Tutorial 2: Create our tests</h1>
 
+&lt; [Creating the project](./tutorial-1.html) | ^ [Tutorial](./tutorial.html) | [Relish components](./tutorial-3.html) &gt;
+
 We're going to create an application that will allow a user to create, read, update and delete tasks. Let's say this is our first user story:
 
 > **Story 1: A list of tasks can be managed by the application**
@@ -43,8 +45,4 @@ We'll need to write methods for each of these in the `SomeSteps.java` file that 
 
 And this is where Relish finally makes an appearance&#x2026;
 
-[Previous - Creating the project](./tutorial-1.html)
-
-[Up - Tutorial](./tutorial.html)
-
-[Next - Relish components](./tutorial-3.html)
+&lt; [Creating the project](./tutorial-1.html) | ^ [Tutorial](./tutorial.html) | [Relish components](./tutorial-3.html) &gt;

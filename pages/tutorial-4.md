@@ -2,6 +2,8 @@
 
 <h1 style="margin-top: -16px">Tutorial 4: Adding tasks</h1>
 
+&lt; [Introducing components](./tutorial-3.html) | ^ [Tutorial](./tutorial.html) | [Deleting tasks](./tutorial-5.html) &gt;
+
 Our first scenario was obviously very simplistic. Now let's create a second, which requires a little more interactivity:
 
     Scenario: I can add a task
@@ -227,8 +229,4 @@ That completes the scenario. This is the current state of our `SomeSteps` class:
         }
     }
 
-[Previous - Introducing components](./tutorial-3.html)
-
-[Up - Tutorial](./tutorial.html)
-
-[Next - Deleting tasks](./tutorial-5.html)
+&lt; [Introducing components](./tutorial-3.html) | ^ [Tutorial](./tutorial.html) | [Deleting tasks](./tutorial-5.html) &gt;

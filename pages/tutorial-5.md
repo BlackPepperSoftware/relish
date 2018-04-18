@@ -2,6 +2,8 @@
 
 <h1 style="margin-top: -16px">Tutorial 5: Deleting tasks</h1>
 
+&lt; [Adding tasks](./tutorial-4.html) | ^ [Tutorial](./tutorial.html) | [Editing tasks](./tutorial-6.html) &gt;
+
 For our third scenario, we'll create a test that checks we can delete tasks. To do this, we'll allow the user to select a set of existing tasks, and then delete them:
 
 ![img](../images/delete-tasks.png)
@@ -336,8 +338,4 @@ That means our `SomeSteps.java` file currently looks like this:
         }
     }
 
-[Previous - Adding tasks](./tutorial-4.html)
-
-[Up - Tutorial](./tutorial.html)
-
-[Next - Editing tasks](./tutorial-6.html)
+&lt; [Adding tasks](./tutorial-4.html) | ^ [Tutorial](./tutorial.html) | [Editing tasks](./tutorial-6.html) &gt;
