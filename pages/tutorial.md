@@ -1,6 +1,6 @@
-![img](../images/Relish.png)
+<img style="float: left;" src="../images/Relish.png" width="75" height="100">
 
-# Introduction
+# Relish Tutorial
 
 In this tutorial, we'll go through the steps required to create a Relish test suite for a simple task management application.
 
