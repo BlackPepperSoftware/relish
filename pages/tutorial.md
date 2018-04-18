@@ -1,6 +1,6 @@
 <img style="float: left; margin-right: 16px;" src="../images/Relish.png" width="28" height="38">
 
-# Relish Tutorial
+<h1 style="margin-top: -16px">Relish Tutorial</h1>
 
 In this tutorial, we'll go through the steps required to create a Relish test suite for a simple task management application.
 
