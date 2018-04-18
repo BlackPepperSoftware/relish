@@ -123,4 +123,4 @@ Steps are the lines of code that tell Cucumber how to run your test. We're going
 
 [Up - Tutorial](./tutorial.html)
 
-[Next - Create our tests](./tutorial-3.html)
+[Next - Create our tests](./tutorial-2.html)
