@@ -12,7 +12,7 @@ import static uk.co.blackpepper.relish.core.TestUtils.attempt;
  *
  * @param <T> the type parameter
  */
-public abstract class ListWidget<T> extends Widget<T> {
+public abstract class ListWidget<T,U extends Widget> extends Widget<T> {
     private Widget<T> widget;
 
     /**
@@ -30,7 +30,7 @@ public abstract class ListWidget<T> extends Widget<T> {
         this.widget = widget;
     }
 
-    protected abstract Widget<T> get(int i);
+    protected abstract U get(int i);
 
     protected abstract int length();
 

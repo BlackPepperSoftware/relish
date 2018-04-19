@@ -14,7 +14,7 @@ import java.util.function.Predicate;
 
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
-public abstract class SelenideListWidget<T extends Widget> extends ListWidget<SelenideElement>
+public abstract class SelenideListWidget<T extends Widget> extends ListWidget<SelenideElement,T>
 {
     public SelenideListWidget(By selector, Component parent)
     {
