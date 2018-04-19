@@ -10,7 +10,8 @@ import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 /**
  * The type Widget.
  *
- * @param <T> the type parameter
+ * @param <T> the type of the peer (e.g. SelenideElement)
+ * @param <U> the type of the child widget this list contains
  */
 public abstract class ListWidget<T,U extends Widget> extends Widget<T> {
     private Widget<T> widget;
@@ -30,9 +31,10 @@ public abstract class ListWidget<T,U extends Widget> extends Widget<T> {
         this.widget = widget;
     }
 
-    protected abstract U get(int i);
-
-    protected abstract int length();
+    protected int length()
+    {
+        return items().size();
+    }
 
     public void matches(final List assertionValues) {
         attempt(new Runnable() {
@@ -81,6 +83,21 @@ public abstract class ListWidget<T,U extends Widget> extends Widget<T> {
             }
         }, 500, 10);
     }
+
+    protected U get(int i)
+    {
+        List<T> rows = items();
+
+        if(rows.size() < i + 1)
+        {
+            throw new IllegalStateException("Not enough rows to read row " + i);
+        }
+        return createItem(rows.get(i));
+    }
+
+    protected abstract U createItem(T e);
+
+    protected abstract List<T> items();
 
     @Override
     public String getStringValue()

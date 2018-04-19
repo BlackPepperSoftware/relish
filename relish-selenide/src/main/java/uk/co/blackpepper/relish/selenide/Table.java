@@ -42,16 +42,17 @@ public class Table extends SelenideListWidget<HtmlRow>
     }
 
     @Override
-    protected List<WebElement> items()
+    protected List<SelenideElement> items()
     {
         return get().findElements(By.tagName("tr")).stream()
+            .map(e -> $(e))
             // Ignore rows without TD elements
             .filter(e -> !e.findElements(By.tagName("td")).isEmpty())
             .collect(toList());
     }
 
     @Override
-    protected HtmlRow createItem(WebElement e)
+    protected HtmlRow createItem(SelenideElement e)
     {
         List<String> headings = headings();
         return new HtmlRow($(e), this, headings).withBuilders(builders);
