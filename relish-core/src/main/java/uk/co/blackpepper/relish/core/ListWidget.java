@@ -30,9 +30,9 @@ public abstract class ListWidget<T> extends Widget<T> {
         this.widget = widget;
     }
 
-    public abstract Widget<T> get(int i);
+    protected abstract Widget<T> get(int i);
 
-    public abstract int length();
+    protected abstract int length();
 
     public void matches(final List assertionValues) {
         attempt(new Runnable() {
@@ -88,52 +88,37 @@ public abstract class ListWidget<T> extends Widget<T> {
         throw new IllegalStateException("Cannot find a string value for an entire list widget");
     }
 
-    /**
-     * Get t.
-     *
-     * @return the t
-     */
+    @Override
     public T get() {
         return widget.get();
     }
 
-    /**
-     * Click.
-     */
+    @Override
     public void click() {
         widget.click();
     }
 
-    /**
-     * Assert invisible.
-     */
+    @Override
     public void assertInvisible() {
         widget.assertInvisible();
     }
 
+    @Override
     public void assertVisible() {
         widget.assertVisible();
     }
 
-    /**
-     * Assert disabled.
-     */
+    @Override
     public void assertDisabled() {
         widget.assertDisabled();
     }
 
-    /**
-     * Assert enabled.
-     */
+    @Override
     public void assertEnabled() {
         widget.assertEnabled();
     }
 
-    /**
-     * Scroll to widget.
-     *
-     * @return the widget
-     */
+    @Override
     public Widget<T> scrollTo() {
         return widget.scrollTo();
     }
