@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-public class Table extends SelenideListWidget<HtmlRow>
+public class Table extends SelenideAbstractListWidget<HtmlRow>
 {
     private Map<String,Function<SelenideElement,SelenideWidget>> builders = new HashMap<>();
 

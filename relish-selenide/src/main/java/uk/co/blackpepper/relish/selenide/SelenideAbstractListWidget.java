@@ -5,21 +5,21 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
 import uk.co.blackpepper.relish.core.Component;
-import uk.co.blackpepper.relish.core.ListWidget;
+import uk.co.blackpepper.relish.core.AbstractListWidget;
 import uk.co.blackpepper.relish.core.Widget;
 
 import java.util.function.Predicate;
 
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
-public abstract class SelenideListWidget<T extends Widget> extends ListWidget<SelenideElement,T>
+public abstract class SelenideAbstractListWidget<T extends Widget> extends AbstractListWidget<SelenideElement,T>
 {
-    public SelenideListWidget(By selector, Component parent)
+    public SelenideAbstractListWidget(By selector, Component parent)
     {
         super(new SelenideWidget(selector, parent), parent);
     }
 
-    public SelenideListWidget(SelenideElement element, Component parent)
+    public SelenideAbstractListWidget(SelenideElement element, Component parent)
     {
         super(new SelenideWidget(element, parent), parent);
     }

@@ -13,7 +13,7 @@ import static uk.co.blackpepper.relish.core.TestUtils.attempt;
  * @param <T> the type of the peer (e.g. SelenideElement)
  * @param <U> the type of the child widget this list contains
  */
-public abstract class ListWidget<T,U extends Widget> extends Widget<T> {
+public abstract class AbstractListWidget<T,U extends Widget> extends Widget<T> {
     private Widget<T> widget;
 
     /**
@@ -22,7 +22,7 @@ public abstract class ListWidget<T,U extends Widget> extends Widget<T> {
      * @param widget   the widget for this list
      * @param parent the parent
      */
-    public ListWidget(Widget<T> widget, Component parent) {
+    public AbstractListWidget(Widget<T> widget, Component parent) {
         super(widget.get(), parent);
         if (parent == null) {
             throw new IllegalArgumentException("Parent cannot be null");
