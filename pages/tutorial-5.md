@@ -26,13 +26,13 @@ Let's look at what kind of impact that has on our tests. First, let's edit the f
 What do we need to do to handle the new *Priority* value? We will begin by adding a new field to the `AddTaskPage` class:
 
     package com.example.components;
+
+    import org.openqa.selenium.By;
     
     import uk.co.blackpepper.relish.selenide.DropDown;
     import uk.co.blackpepper.relish.selenide.InputText;
     import uk.co.blackpepper.relish.selenide.Page;
     import uk.co.blackpepper.relish.selenide.SelenideWidget;
-    import uk.co.blackpepper.relish.selenide.Table;
-    import org.openqa.selenium.By;
     
     public class AddTaskPage extends Page {
         public AddTaskPage() {

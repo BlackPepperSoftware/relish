@@ -1,11 +1,11 @@
 package com.example.components;
 
+import org.openqa.selenium.By;
+
 import uk.co.blackpepper.relish.selenide.DropDown;
 import uk.co.blackpepper.relish.selenide.InputText;
 import uk.co.blackpepper.relish.selenide.Page;
 import uk.co.blackpepper.relish.selenide.SelenideWidget;
-import uk.co.blackpepper.relish.selenide.Table;
-import org.openqa.selenium.By;
 
 public class AddTaskPage extends Page {
     public AddTaskPage() {
