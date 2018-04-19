@@ -71,7 +71,7 @@ public class SomeSteps
     @When("^I change the '([^']*)' task to$")
     public void iChangeTheTaskTo(String name, @Transpose List<TableRow> task)
     {
-        taskPage.taskTable().findFirst("name", name).getWidget(2).click();
+        taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(2).click();
         editTaskPage.set(task.get(0));
         editTaskPage.saveButton().click();
     }

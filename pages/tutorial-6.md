@@ -70,11 +70,11 @@ The only step we need to implement for our "Edit" scenario is this one:
 
 That means we need a way to access the edit button for the row with name `Buy some milk`. We can do that with a method on `Table` called `findFirst(...)`:
 
-    taskPage.taskTable().findFirst("name", "Buy some milk")
+    taskPage.taskTable().findFirst(row -> row.get("name").equals("Buy some milk"))
 
 This will return a Relish `HtmlRow` test component for the first row it finds with the correct name. The `HtmlRow` has a method called `getWidget(...)` which gives us access to the component for a single cell, either by passing a name, or a column number. That means we can click on the edit button for the `Buy some milk` row with this:
 
-    taskPage.taskTable().findFirst("name", "Buy some milk").getWidget(2).click();
+    taskPage.taskTable().findFirst(row -> row.get("name").equals("Buy some milk")).getWidget(2).click();
 
 Adding this to a full implementation of the step, brings us to this version of the `SomeSteps.java` file:
 
@@ -151,7 +151,7 @@ Adding this to a full implementation of the step, brings us to this version of t
         @When("^I change the '([^']*)' task to$")
         public void iChangeTheTaskTo(String name, @Transpose List<TableRow> task)
         {
-            taskPage.taskTable().findFirst("name", name).getWidget(2).click();
+            taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(2).click();
             editTaskPage.set(task.get(0));
             editTaskPage.saveButton().click();
         }

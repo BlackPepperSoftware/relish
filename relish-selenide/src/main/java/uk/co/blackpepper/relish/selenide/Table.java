@@ -2,20 +2,18 @@ package uk.co.blackpepper.relish.selenide;
 
 import com.codeborne.selenide.SelenideElement;
 
-import org.junit.Assert;
-import org.junit.AssumptionViolatedException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import uk.co.blackpepper.relish.core.Component;
 import uk.co.blackpepper.relish.core.ListWidget;
-import uk.co.blackpepper.relish.core.Widget;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -55,39 +53,41 @@ public class Table extends ListWidget<SelenideElement>
     @Override
     public HtmlRow get(int i)
     {
-        List<WebElement> rows = getRows();
+        List<WebElement> rows = items();
 
         if(rows.size() < i + 1)
         {
             throw new IllegalStateException("Not enough rows to read row " + i);
         }
-        return new HtmlRow($(rows.get(i)), this, Arrays.asList(headings())).withBuilders(builders);
+        return createItem(rows.get(i)).withBuilders(builders);
     }
 
     @Override
     public int length()
     {
-        return getRows().size();
+        return items().size();
     }
 
-    public HtmlRow findFirst(String heading, String value)
+    public HtmlRow findFirst(Predicate<HtmlRow> htmlRowPredicate)
     {
-        attempt(() -> findFirstImpl(heading, value), 500, 4);
-        return findFirstImpl(heading, value);
+        attempt(() -> findFirstImpl(htmlRowPredicate), 500, 4);
+        return findFirstImpl(htmlRowPredicate);
     }
 
-    private HtmlRow findFirstImpl(String heading, String value)
+    private HtmlRow findFirstImpl(Predicate<HtmlRow> htmlRowPredicate)
     {
-        List<String> headingList = Arrays.asList(headings());
-        assertTrue("Cannot find heading '" + heading + "'", headingList.contains(heading));
-        int len = length();
-        for (int i = 0; i < len; i++) {
-            HtmlRow htmlRow = get(i);
-            if (value.equals(htmlRow.get(heading))) {
-                return htmlRow;
-            }
-        }
-        throw new AssumptionViolatedException("Cannot find a row with '" + heading + "' set to '" + value + "'");
+
+        return items()
+            .stream()
+            .map(e -> createItem(e))
+            .filter(htmlRowPredicate)
+            .findFirst()
+            .orElseThrow(() -> new RuntimeException("No cell found for predicate"));
+    }
+
+    protected HtmlRow createItem(WebElement e)
+    {
+        return new HtmlRow($(e), this, Arrays.asList(headings()));
     }
 
     private String[] headings()
@@ -106,7 +106,7 @@ public class Table extends ListWidget<SelenideElement>
         return join.substring(0, 1).toLowerCase() + join.substring(1);
     }
 
-    private List<WebElement> getRows()
+    protected List<WebElement> items()
     {
         return get().findElements(By.tagName("tr")).stream()
             // Ignore rows without TD elements
