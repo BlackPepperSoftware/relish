@@ -60,6 +60,23 @@
           nameCell.appendChild(document.createTextNode(task.name));
           taskRow.appendChild(nameCell)
 
+          var priorityCell = document.createElement("td");
+          var priority = task.priority || '';
+          var priorityText = '';
+          switch(priority) {
+            case 'H':
+              priorityText = 'High';
+              break;
+            case 'M':
+              priorityText = 'Medium';
+              break;
+            case 'L':
+              priorityText = 'Low';
+              break;
+          }
+          priorityCell.appendChild(document.createTextNode(priorityText));
+          taskRow.appendChild(priorityCell)
+
           var selectCell = document.createElement("td");
           var checkbox = document.createElement("input");
           checkbox.type = "checkbox";
@@ -91,6 +108,7 @@
     <thead>
     <tr>
         <th>Name</th>
+        <th>Priority</th>
         <th>Select</th>
     </tr>
     </thead>

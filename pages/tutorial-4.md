@@ -229,4 +229,4 @@ That completes the scenario. This is the current state of our `SomeSteps` class:
         }
     }
 
-&lt; [Relish components](./tutorial-3.html) | ^ [Tutorial](./tutorial.html) | [Deleting tasks](./tutorial-5.html) &gt;
+&lt; [Relish components](./tutorial-3.html) | ^ [Tutorial](./tutorial.html) | [Add more fields](./tutorial-5.html) &gt;

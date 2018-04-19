@@ -22,17 +22,41 @@
         var string = reg.exec(href);
         return string ? string[1] : null;
       };
+      function setPriorityOptions() {
+        var priorities = document.getElementById('priority');
+
+        //<option value="H">High</option>
+        var highCell = document.createElement("option");
+        highCell.value = 'H';
+        highCell.innerText = 'High';
+        priorities.appendChild(highCell);
+
+        var mediumCell = document.createElement("option");
+        mediumCell.value = 'M';
+        mediumCell.innerText = 'Medium';
+        priorities.appendChild(mediumCell);
+
+        var lowCell = document.createElement("option");
+        lowCell.value = 'L';
+        lowCell.innerText = 'Low';
+        priorities.appendChild(lowCell);
+
+
+      }
       function load() {
         var tasks = getTasks();
         var taskId = parseInt(getQueryString("id"));
         var task = tasks[taskId];
-        console.log('XXXXXX task', task, taskId);
         document.getElementById("name").value = task.name;
+        document.getElementById("priority").value = task.priority;
       }
       function save() {
         var tasks = getTasks();
         var taskId = parseInt(getQueryString("id"));
-        tasks[taskId] = {name: document.getElementById('name').value};
+        tasks[taskId] = {
+          name: document.getElementById('name').value,
+          priority: document.getElementById('priority').value,
+        };
         setTasks(tasks);
         window.setTimeout(function () {
           window.location = "index.html";
@@ -45,10 +69,18 @@
 <form>
     <label for="name">Name</label>
     <input id="name" name="name">
+    <label for="priority">Priority</label>
+    <select id="priority" name="priority">
+    </select>
     <button onClick="save(); return false;" class="saveButton">Save</button>
 </form>
 <script>
-    load();
+  window.setTimeout(function () {
+    setPriorityOptions();
+    window.setTimeout(function () {
+      load();
+    }, 1000);
+  }, 1000);
 </script>
 </body>
 </html>

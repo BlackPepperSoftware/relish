@@ -53,7 +53,7 @@ public class SomeSteps
     public void iWillSelectTheseTasks(List<TableRow> tasks)
     {
         taskPage.taskTable().matches(tasks.stream().map(t -> t.except("select")).collect(Collectors.toList()));
-        taskPage.taskTable().set(tasks.stream().map(t -> t.except("name")).collect(Collectors.toList()));
+        taskPage.taskTable().set(tasks.stream().map(t -> t.except("name", "priority")).collect(Collectors.toList()));
     }
 
     @When("^I choose to delete the selected tasks$")
@@ -71,7 +71,7 @@ public class SomeSteps
     @When("^I change the '([^']*)' task to$")
     public void iChangeTheTaskTo(String name, @Transpose List<TableRow> task)
     {
-        taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(2).click();
+        taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(3).click();
         editTaskPage.set(task.get(0));
         editTaskPage.saveButton().click();
     }

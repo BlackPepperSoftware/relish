@@ -16,8 +16,11 @@ Starting our first proper scenario using Relish components.
 4. [Adding tasks](./tutorial-4.html)
 Sending data to a form and asserting the contents of a table.
 
-5. [Deleting tasks](./tutorial-5.html)
+5. [Adding more fields](./tutorial-5.html)
+How Relish deals with the impact of changing the data model.
+
+6. [Deleting tasks](./tutorial-6.html)
 Adding interactive components to a table, and working with `TableRow` objects.
 
-6. [Editing tasks](./tutorial-6.html)
+7. [Editing tasks](./tutorial-7.html)
 Handling table columns without headings and filtering rows.

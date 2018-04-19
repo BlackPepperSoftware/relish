@@ -10,7 +10,10 @@
         if (taskString) {
           tasks = JSON.parse(taskString);
         }
-        tasks.push({name: document.getElementById('name').value});
+        tasks.push({
+                     name: document.getElementById('name').value,
+                     priority: document.getElementById('priority').value,
+                   });
         localStorage.setItem("tasks", JSON.stringify(tasks));
         window.setTimeout(function () {
           window.location = "index.html";
@@ -23,6 +26,12 @@
 <form>
     <label for="name">Name</label>
     <input id="name" name="name">
+    <label for="priority">Priority</label>
+    <select id="priority" name="priority">
+        <option value="H">High</option>
+        <option value="M" selected>Medium</option>
+        <option value="L">Low</option>
+    </select>
     <button onClick="save(); return false;" class="saveButton">Save</button>
 </form>
 </body>

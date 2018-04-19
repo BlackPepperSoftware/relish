@@ -10,43 +10,44 @@ Feature: A list of tasks can be managed by the application
   Scenario: I can add a task
     Given I am on the task list
     When I choose to add these tasks
-      | Name           |
-      | Buy some bread |
-      | Buy some milk  |
+      | Name           | Priority |
+      | Buy some bread | High     |
+      | Buy some milk  | Low      |
     Then I will see this on the list of tasks
-      | Name           |
-      | Buy some bread |
-      | Buy some milk  |
+      | Name           | Priority |
+      | Buy some bread | High     |
+      | Buy some milk  | Low      |
 
   Scenario: Can delete tasks
     Given I am on the task list
     Then the delete button is disabled
     When I choose to add these tasks
-      | Name           |
-      | Buy some bread |
-      | Buy some milk  |
-      | Buy some water |
+      | Name           | Priority |
+      | Buy some bread | High     |
+      | Buy some milk  | Medium   |
+      | Buy some water | Low      |
     And I will select these tasks
-      | Name           | Select |
-      | Buy some bread | true   |
-      | Buy some milk  | false  |
-      | Buy some water | true   |
+      | Name           | Priority | Select |
+      | Buy some bread | High     | true   |
+      | Buy some milk  | Medium   | false  |
+      | Buy some water | Low      | true   |
     And I choose to delete the selected tasks
     Then I will see this on the list of tasks
-      | Name          | Select |
-      | Buy some milk | false  |
+      | Name          | Priority | Select |
+      | Buy some milk | Medium   | false  |
 
   Scenario: Can edit a task
     Given I am on the task list
     When I choose to add these tasks
-      | Name           |
-      | Buy some bread |
-      | Buy some milk  |
-      | Buy some water |
+      | Name           | Priority |
+      | Buy some bread | Medium   |
+      | Buy some milk  | Low      |
+      | Buy some water | High     |
     And I change the 'Buy some milk' task to
-      | Name | Buy some cream |
+      | Name     | Buy some cream |
+      | Priority | Medium         |
     Then I will see this on the list of tasks
-      | Name           |
-      | Buy some bread |
-      | Buy some cream |
-      | Buy some water |
+      | Name           | Priority |
+      | Buy some bread | Medium   |
+      | Buy some cream | Medium   |
+      | Buy some water | High     |

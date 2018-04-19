@@ -418,6 +418,303 @@ That completes the scenario. This is the current state of our =SomeSteps= class:
       }
   }
 #+END_SRC
+* Adding more fields
+
+Now let's see what happens if there's a sudden change or requirements. Let's say that the customer suddenly decides that instead of just recording the /name/ against each task, we also want to record a /priority/ value of /High/, /Medium/ or /Low/.
+
+[[../images/tasks-with-priorities.png]]
+
+[[../images/add-with-priority.png]]
+
+Let's look at what kind of impact that has on our tests. First, let's edit the feature file to include the new /Priority/ field:
+
+#+BEGIN_SRC shell interactive 
+  Scenario: I can add a task
+    Given I am on the task list
+    When I choose to add these tasks
+      | Name           | Priority |
+      | Buy some bread | High     |
+      | Buy some milk  | Low      |
+    Then I will see this on the list of tasks
+      | Name           | Priority |
+      | Buy some bread | High     |
+      | Buy some milk  | Low      |
+#+END_SRC
+
+What do we need to do to handle the new /Priority/ value? We will begin by adding a new field to the =AddTaskPage= class:
+
+#+BEGIN_SRC java
+  package com.example.components;
+
+  import uk.co.blackpepper.relish.selenide.DropDown;
+  import uk.co.blackpepper.relish.selenide.InputText;
+  import uk.co.blackpepper.relish.selenide.Page;
+  import uk.co.blackpepper.relish.selenide.SelenideWidget;
+  import uk.co.blackpepper.relish.selenide.Table;
+  import org.openqa.selenium.By;
+
+  public class AddTaskPage extends Page {
+      public AddTaskPage() {
+          super("/add.html");
+      }
+
+      public InputText name() {
+          return new InputText(By.id("name"), this);
+      }
+
+      public DropDown priority() {
+          return new DropDown(By.id("priority"), this);
+      }
+
+      public SelenideWidget saveButton() {
+          return new SelenideWidget(By.className("saveButton"), this);
+      }
+  }
+#+END_SRC
+
+The field we've added is a Relish =DropDown= widget, which is used to interact with HTML =<select/>= elements.
+
+What else do we need to do? Well actually, *nothing*. Let's review the updated scenario:
+
+#+BEGIN_SRC feature
+  Scenario: I can add a task
+    Given I am on the task list
+    When I choose to add these tasks
+      | Name           | Priority |
+      | Buy some bread | High     |
+      | Buy some milk  | Low      |
+    Then I will see this on the list of tasks
+      | Name           | Priority |
+      | Buy some bread | High     |
+      | Buy some milk  | Low      |
+#+END_SRC
+
+We already have a step to add tasks:
+
+#+BEGIN_SRC java
+    @When("^I choose to add these tasks$")
+    public void iChooseToAddTheseTasks(List<TableRow> tasks)
+    {
+        for(TableRow task : tasks)
+        {
+            taskPage.addButton().click();
+            addTaskPage.set(task);
+            addTaskPage.saveButton().click();
+        }
+    }
+#+END_SRC
+
+This code passes the contents of the feature table straight to the =AddTaskPage=. Relish will match the new /Priority/ column with the =DropDown= widget returned from the =AddTaskPage.priority()= method, and pass it the /High/, /Medium/ and /Low/ values to it.
+
+We've also already implemented the step to check the list of all tasks:
+
+#+BEGIN_SRC java
+    @Then("^I will see this on the list of tasks$")
+    public void iWillSeeThisOnTheListOfTasks(List<TableRow> tasks)
+    {
+        taskPage.taskTable().matches(tasks);
+    }
+#+END_SRC
+
+This passes the feature table to the =Table= object, which will automatically checks that the new column appears in the table.
+
+This demonstrates how Relish can help you not only create UI tests more quickly, but it can also greatly reduce the impact of changes to your tests.
+
+** Implementing the 'When I choose to add these tasks' step
+
+We'll first modify our =TaskPage= class, adding in a testing component for the 'Add task' button:
+
+#+BEGIN_SRC java
+  package com.example.components;
+
+  import org.openqa.selenium.By;
+
+  import uk.co.blackpepper.relish.selenide.Table;
+  import uk.co.blackpepper.relish.selenide.Page;
+  import uk.co.blackpepper.relish.selenide.SelenideWidget;
+
+  public class TaskPage extends Page
+  {
+      public TaskPage()
+      {
+          super("/index.html");
+      }
+
+      public Table taskTable()
+      {
+          return new Table(By.className("tasks"), this);
+      }
+
+      public SelenideWidget addButton()
+      {
+          return new SelenideWidget(By.className("addButton"), this);
+      }
+  }
+#+END_SRC
+
+Our new =addButton()= method returns =SelenideWidget= Relish object. This is a generic component that represent some part of a web page that we can look at and click. 
+
+We'll also need to create a class for our second page: the one for creating a new task. We'll this =AddTaskPage=:
+
+#+BEGIN_SRC java
+  package com.example.components;
+
+  import uk.co.blackpepper.relish.selenide.InputText;
+  import uk.co.blackpepper.relish.selenide.Page;
+  import uk.co.blackpepper.relish.selenide.SelenideWidget;
+  import uk.co.blackpepper.relish.selenide.Table;
+  import org.openqa.selenium.By;
+
+  public class AddTaskPage extends Page {
+      public AddTaskPage() {
+          super("/add.html");
+      }
+
+      public InputText name() {
+          return new InputText(By.id("name"), this);
+      }
+
+      public SelenideWidget saveButton() {
+          return new SelenideWidget(By.className("saveButton"), this);
+      }
+  }
+#+END_SRC
+
+This class will be used to interact with the 'Add task page', which it will expect to find at path =/add.html=. It will include a button with the class name "saveButton" (which we represent by a =SelenideWidget= object), and also an =InputText= component with id "name". =InputText= is another Relish component for interacting with text fields.
+
+Now we that have our page objects structured in the way that we want, we now need to write a 'When I choose to add these tasks' step. Remember: this is what the step looks like in our scenario:
+
+#+BEGIN_SRC feature
+    When I choose to add these tasks
+      | Name           |
+      | Buy some bread |
+      | Buy some milk  |
+#+END_SRC
+
+This step will need to be passed the contents of the data-table containing the details of our new tasks. We normally do this in a Relish test by specifying the table as a list of Relish =TableRow= objects:
+
+#+BEGIN_SRC java
+  @When("^I choose to add these tasks$")
+  public void iChooseToAddTheseTasks(List<TableRow> tasks)
+  {
+  ....
+  }
+#+END_SRC
+
+A =TableRow= is very similar to a =Map<String,String>= and it's designed specifically to interact with Relish components. You'll see how shortly.
+
+Now that we've begun to create our step, we'll need to fill out the code. We'll loop through each of the =TableRow= objects from the table, and for each one:
+
+# Click on the 'Add task' button on the front page
+# Fill out 'Add task' form on the 'Add task' page
+# Then click 'Save' to return to the front page
+
+This is how this is done in Relish:
+
+#+BEGIN_SRC java
+    @When("^I choose to add these tasks$")
+    public void iChooseToAddTheseTasks(List<TableRow> tasks)
+    {
+        for(TableRow task : tasks)
+        {
+            taskPage.addButton().click();
+            addTaskPage.set(task);
+            addTaskPage.saveButton().click();
+        }
+    }
+#+END_SRC
+
+Notice that we're assuming here we've created a =addTaskPage= object higher up in the class.
+
+The =addButton()= and =saveButton()= components (like all =selenide-relish= widgets) have =click()= methods. The interesting line is =addTaskPage.set(task)=.
+
+The =set()= method accepts a =TableRow= object and uses it to update all of the sub-components whose names match the columns in the =TableRow=. So because our table looks like this:
+
+| Name           |
+|----------------|
+| Buy some bread |
+| Buy some milk  |
+
+The =set()= method will convert the (only) column "Name" into camel-case, and look for a =name()= method on the =AddTaskPage= object. In our case, this =name()= method returns an =InputText= field, and Relish will tell the the =InputText= component to type in the strings "Buy some bread" and "Buy some milk" on each of the occasions that it visits the page.
+
+If there had been multiple columns in the feature table, Relish would have looked for a matching component for each of them, and entered the data into each of the fields in the form.
+
+This is where we start to benefit from the testing components built in to Relish: a lot of the boring "glue" code that takes data from a Cucumber scenario and passes it through to Selenide is done for us.
+
+** Implementing the 'Then I will see this on the list of tasks' step
+
+Now we need to check that the tasks we entered in the previous step now appear on the list of tasks on the main screen:
+
+#+BEGIN_SRC feature
+    Then I will see this on the list of tasks
+      | Name           |
+      | Buy some bread |
+      | Buy some milk  |
+#+END_SRC
+
+This is actually remarkably easy to implement, because we already have all the components in place in the =Page= objects:
+
+#+BEGIN_SRC java
+    @Then("^I will see this on the list of tasks$")
+    public void iWillSeeThisOnTheListOfTasks(List<TableRow> tasks)
+    {
+        taskPage.taskTable().matches(tasks);
+    }
+#+END_SRC
+
+This uses the =matches()= method of the =taskTable()= to assert that the table contains rows that match the detail of each =TableRow=. The =Table= object will handle all of the details of finding the column headings and matching them to the column names in the table. 
+
+That completes the scenario. This is the current state of our =SomeSteps= class:
+
+#+BEGIN_SRC java
+  package com.example.steps;
+
+  import com.example.components.AddTaskPage;
+  import com.example.components.TaskPage;
+
+  import uk.co.blackpepper.relish.core.TableRow;
+
+  import java.util.List;
+
+  import cucumber.api.java.en.Given;
+  import cucumber.api.java.en.Then;
+  import cucumber.api.java.en.When;
+
+  public class SomeSteps
+  {
+      private TaskPage taskPage = new TaskPage();
+      private AddTaskPage addTaskPage = new AddTaskPage();
+
+      @Given("^I am on the task list$")
+      public void iAmOnTheTaskList()
+      {
+          taskPage.launch();
+      }
+
+      @Then("^the list of tasks will be empty$")
+      public void theListOfTasksWillBeEmpty()
+      {
+          taskPage.taskTable().assertEmpty();
+      }
+
+      @When("^I choose to add these tasks$")
+      public void iChooseToAddTheseTasks(List<TableRow> tasks)
+      {
+          for(TableRow task : tasks)
+          {
+              taskPage.addButton().click();
+              addTaskPage.set(task);
+              addTaskPage.saveButton().click();
+          }
+      }
+
+      @Then("^I will see this on the list of tasks$")
+      public void iWillSeeThisOnTheListOfTasks(List<TableRow> tasks)
+      {
+          taskPage.taskTable().matches(tasks);
+      }
+  }
+#+END_SRC
 * A third scenario: deleting tasks with interactive tables
 
 For our third scenario, we'll create a test that checks we can delete tasks. To do this, we'll allow the user to select a set of existing tasks, and then delete them:
@@ -568,11 +865,11 @@ But we will need to write new code for =And I will select these tasks=. This ste
 
 Our step will use this data from the feature file:
 
-| Name           | Select |
-|----------------+--------|
-| Buy some bread | true   |
-| Buy some milk  | false  |
-| Buy some water | true   |
+| Name           | Priority | Select |
+|----------------+----------+--------|
+| Buy some bread | High     | true   |
+| Buy some milk  | Medium   | false  |
+| Buy some water | Low      | true   |
 
 There's something we need to think about before we implement this step: we need to update the checkboxes using the data in the =Select= column, but we *can't* update the data in the =Name= column, because it will just be static text on the page:
 
@@ -580,11 +877,11 @@ There's something we need to think about before we implement this step: we need 
 
 So what we'll do instead is get the step to split the table into two tables that are like this:
 
-| Name           |
-|----------------|
-| Buy some bread |
-| Buy some milk  |
-| Buy some water |
+| Name           | Priority |
+|----------------+----------|
+| Buy some bread | High     |
+| Buy some milk  | Medium   |
+| Buy some water | Low      |
 
 | Select |
 |--------|
