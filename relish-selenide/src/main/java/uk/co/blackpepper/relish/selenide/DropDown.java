@@ -1,10 +1,10 @@
 package uk.co.blackpepper.relish.selenide;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.Select;
 
 import uk.co.blackpepper.relish.core.Component;
 
@@ -29,7 +29,14 @@ public class DropDown extends InputWidget {
     public void setStringValue(String option)
     {
         assertVisible();
-        get().selectOption(option);
+        attempt(() ->
+        {
+            if (options().contains(option)) {
+                get().selectOption(option);
+            } else {
+                new Select(get().toWebElement()).selectByValue(option);
+            }
+        }, 1000, 10);
     }
 
     public void assertHasOptions(List<String> options)
@@ -37,8 +44,7 @@ public class DropDown extends InputWidget {
         assertVisible();
         attempt(() ->
         {
-            ElementsCollection elements = get().$$(By.tagName("option"));
-            List<String> actual = elements.stream().map(x -> x.text()).collect(Collectors.toList());
+            List<String> actual = options();
             assertThat(actual, contains(options.toArray()));
         }, 1000, 10);
     }
@@ -47,5 +53,11 @@ public class DropDown extends InputWidget {
     {
         assertVisible();
         get().getSelectedOption().shouldHave(text(option));
+    }
+
+    private List<String> options()
+    {
+        ElementsCollection elements = get().$$(By.tagName("option"));
+        return elements.stream().map(x -> x.text()).collect(Collectors.toList());
     }
 }

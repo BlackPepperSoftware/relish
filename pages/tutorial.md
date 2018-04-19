@@ -26,3 +26,8 @@ Adding interactive components to a table, and working with `TableRow` objects.
 
 7. [Editing tasks](./tutorial-7.html)
 Handling table columns without headings and filtering rows.
+
+7. [Custom components](./tutorial-8.html)
+If you re-use components in your, you should consider re-using components in your tests.
+
+![img](../images/tutorial-run.gif)

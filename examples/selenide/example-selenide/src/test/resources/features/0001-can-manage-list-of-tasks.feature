@@ -10,13 +10,13 @@ Feature: A list of tasks can be managed by the application
   Scenario: I can add a task
     Given I am on the task list
     When I choose to add these tasks
-      | Name           | Priority |
-      | Buy some bread | High     |
-      | Buy some milk  | Low      |
+      | Name           | Priority | Status  |
+      | Buy some bread | High     | Ready   |
+      | Buy some milk  | Low      | Waiting |
     Then I will see this on the list of tasks
-      | Name           | Priority |
-      | Buy some bread | High     |
-      | Buy some milk  | Low      |
+      | Name           | Priority | Status  |
+      | Buy some bread | High     | Ready   |
+      | Buy some milk  | Low      | Waiting |
 
   Scenario: Can delete tasks
     Given I am on the task list
@@ -39,15 +39,16 @@ Feature: A list of tasks can be managed by the application
   Scenario: Can edit a task
     Given I am on the task list
     When I choose to add these tasks
-      | Name           | Priority |
-      | Buy some bread | Medium   |
-      | Buy some milk  | Low      |
-      | Buy some water | High     |
+      | Name           | Priority | Status  |
+      | Buy some bread | Medium   | Ready   |
+      | Buy some milk  | Low      | Waiting |
+      | Buy some water | High     | Pending |
     And I change the 'Buy some milk' task to
       | Name     | Buy some cream |
       | Priority | Medium         |
+      | Status   | Done           |
     Then I will see this on the list of tasks
-      | Name           | Priority |
-      | Buy some bread | Medium   |
-      | Buy some cream | Medium   |
-      | Buy some water | High     |
+      | Name           | Priority | Status  |
+      | Buy some bread | Medium   | Ready   |
+      | Buy some cream | Medium   | Done    |
+      | Buy some water | High     | Pending |

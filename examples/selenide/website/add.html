@@ -10,9 +10,26 @@
         if (taskString) {
           tasks = JSON.parse(taskString);
         }
+
+        var radios = document.getElementsByName('status');
+        var status = '';
+
+        for (var i = 0, length = radios.length; i < length; i++)
+        {
+          if (radios[i].checked)
+          {
+            // do whatever you want with the checked radio
+            status = radios[i].value;
+
+            // only one radio can be logically checked, don't check the rest
+            break;
+          }
+        }
+
         tasks.push({
                      name: document.getElementById('name').value,
                      priority: document.getElementById('priority').value,
+                     status: status,
                    });
         localStorage.setItem("tasks", JSON.stringify(tasks));
         window.setTimeout(function () {
@@ -32,6 +49,13 @@
         <option value="M" selected>Medium</option>
         <option value="L">Low</option>
     </select>
+    <p/><label>Status</label>
+    <br/><input type="radio" id="ready" name="status" value="ready" checked><label for="ready">Ready</label>
+    <br/><input type="radio" id="pending" name="status" value="pending" checked><label for="pending">Pending</label>
+    <br/><input type="radio" id="waiting" name="status" value="waiting" checked><label for="waiting">Waiting</label>
+    <br/><input type="radio" id="ignore" name="status" value="ignore" checked><label for="ignore">Ignore</label>
+    <br/><input type="radio" id="done" name="status" value="done" checked><label for="done">Done</label>
+    <p/>
     <button onClick="save(); return false;" class="saveButton">Save</button>
 </form>
 </body>

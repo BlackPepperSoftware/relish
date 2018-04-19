@@ -2,7 +2,7 @@
 
 <h1 style="margin-top: -16px">Tutorial 7: Editing tasks</h1>
 
-&lt; [Deleting tasks](./tutorial-6.html) | ^ [Tutorial](./tutorial.html)
+&lt; [Deleting tasks](./tutorial-6.html) | ^ [Tutorial](./tutorial.html) | [Custom components](./tutorial-8.html) &gt;
 
 Which brings us to the final scenario for this feature: editing tasks
 
@@ -164,4 +164,4 @@ Adding this to a full implementation of the step, brings us to this version of t
         }
     }
 
-&lt; [Deleting tasks](./tutorial-6.html) | ^ [Tutorial](./tutorial.html)
+&lt; [Deleting tasks](./tutorial-6.html) | ^ [Tutorial](./tutorial.html) | [Custom components](./tutorial-8.html) &gt;

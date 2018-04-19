@@ -49,14 +49,35 @@
         var task = tasks[taskId];
         document.getElementById("name").value = task.name;
         document.getElementById("priority").value = task.priority;
+        document.getElementById(task.status).checked = true;
       }
       function save() {
         var tasks = getTasks();
         var taskId = parseInt(getQueryString("id"));
+
+
+        var radios = document.getElementsByName('status');
+        var status = '';
+
+        for (var i = 0, length = radios.length; i < length; i++)
+        {
+          if (radios[i].checked)
+          {
+            // do whatever you want with the checked radio
+            status = radios[i].value;
+
+            // only one radio can be logically checked, don't check the rest
+            break;
+          }
+        }
+
+
         tasks[taskId] = {
           name: document.getElementById('name').value,
           priority: document.getElementById('priority').value,
+          status: status,
         };
+        console.log('XXXXX tasks', tasks);
         setTasks(tasks);
         window.setTimeout(function () {
           window.location = "index.html";
@@ -72,6 +93,13 @@
     <label for="priority">Priority</label>
     <select id="priority" name="priority">
     </select>
+    <p/><label>Status</label>
+    <br/><input type="radio" id="ready" name="status" value="ready" checked><label for="ready">Ready</label>
+    <br/><input type="radio" id="pending" name="status" value="pending" checked><label for="pending">Pending</label>
+    <br/><input type="radio" id="waiting" name="status" value="waiting" checked><label for="waiting">Waiting</label>
+    <br/><input type="radio" id="ignore" name="status" value="ignore" checked><label for="ignore">Ignore</label>
+    <br/><input type="radio" id="done" name="status" value="done" checked><label for="done">Done</label>
+    <p/>
     <button onClick="save(); return false;" class="saveButton">Save</button>
 </form>
 <script>

@@ -58,7 +58,7 @@
 
           var nameCell = document.createElement("td");
           nameCell.appendChild(document.createTextNode(task.name));
-          taskRow.appendChild(nameCell)
+          taskRow.appendChild(nameCell);
 
           var priorityCell = document.createElement("td");
           var priority = task.priority || '';
@@ -75,7 +75,30 @@
               break;
           }
           priorityCell.appendChild(document.createTextNode(priorityText));
-          taskRow.appendChild(priorityCell)
+          taskRow.appendChild(priorityCell);
+
+          var statusCell = document.createElement("td");
+          var status = task.status || '';
+          var statusText = '';
+          switch(status) {
+            case 'ready':
+              statusText = 'Ready';
+              break;
+            case 'pending':
+              statusText = 'Pending';
+              break;
+            case 'waiting':
+              statusText = 'Waiting';
+              break;
+            case 'ignore':
+              statusText = 'Ignore';
+              break;
+            case 'done':
+              statusText = 'Done';
+              break;
+          }
+          statusCell.appendChild(document.createTextNode(statusText));
+          taskRow.appendChild(statusCell);
 
           var selectCell = document.createElement("td");
           var checkbox = document.createElement("input");
@@ -109,6 +132,7 @@
     <tr>
         <th>Name</th>
         <th>Priority</th>
+        <th>Status</th>
         <th>Select</th>
     </tr>
     </thead>

@@ -38,8 +38,8 @@ public class SomeSteps
         for(TableRow task : tasks)
         {
             taskPage.addButton().click();
-            addTaskPage.set(task);
-            addTaskPage.saveButton().click();
+            addTaskPage.form().set(task);
+            addTaskPage.form().saveButton().click();
         }
     }
 
@@ -71,8 +71,8 @@ public class SomeSteps
     @When("^I change the '([^']*)' task to$")
     public void iChangeTheTaskTo(String name, @Transpose List<TableRow> task)
     {
-        taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(3).click();
-        editTaskPage.set(task.get(0));
-        editTaskPage.saveButton().click();
+        taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(4).click();
+        editTaskPage.form().set(task.get(0));
+        editTaskPage.form().saveButton().click();
     }
 }
