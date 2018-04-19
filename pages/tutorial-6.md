@@ -183,7 +183,7 @@ Our step will use this data from the feature file:
 </tbody>
 </table>
 
-There's something we need to think about before we implement this step: we need to update the checkboxes using the data in the `Select` column, but we **can't** update the data in the `Name` column, because it will just be static text on the page:
+There's something we need to think about before we implement this step: we need to update the checkboxes using the data in the `Select` column, but we **can't** update the data in the `Name` or `Priority` columns, because they contain static text:
 
 ![img](../images/delete-tasks.png)
 
