@@ -2,7 +2,7 @@
 
 <h1 style="margin-top: -16px">Tutorial 4: Adding tasks</h1>
 
-&lt; [Relish components](./tutorial-3.html) | ^ [Tutorial](./tutorial.html) | [Deleting tasks](./tutorial-5.html) &gt;
+&lt; [Relish components](./tutorial-3.html) | ^ [Tutorial](./tutorial.html) | [Adding more fields](./tutorial-5.html) &gt;
 
 Our first scenario was obviously very simplistic. Now let's create a second, which requires a little more interactivity:
 
@@ -229,4 +229,4 @@ That completes the scenario. This is the current state of our `SomeSteps` class:
         }
     }
 
-&lt; [Relish components](./tutorial-3.html) | ^ [Tutorial](./tutorial.html) | [Add more fields](./tutorial-5.html) &gt;
+&lt; [Relish components](./tutorial-3.html) | ^ [Tutorial](./tutorial.html) | [Adding more fields](./tutorial-5.html) &gt;
