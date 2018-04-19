@@ -4,7 +4,7 @@
 
 In this tutorial, we'll go through the steps required to create a Relish test suite for a simple task management application.
 
-You can find the completed code in the [example-selenide](https://github.com/dogriffiths/relish/tree/master/examples/selenide/example-selenide) of the repo.
+You can find the completed code in the [example-selenide](https://github.com/dogriffiths/relish/tree/master/examples/selenide/example-selenide) folder of the repo.
 
 1. [Creating the project](./tutorial-1.html)
 A walkthrough of creating the tasks tutorial testing project.
