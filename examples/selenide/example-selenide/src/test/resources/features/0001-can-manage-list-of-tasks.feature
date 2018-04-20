@@ -46,7 +46,7 @@ Feature: A list of tasks can be managed by the application
     And I change the 'Buy some milk' task to
       | Name     | Buy some cream |
       | Priority | Medium         |
-#      | Status   | Done           |
+      | Status   | Done           |
     Then I will see this on the list of tasks
       | Name           | Priority | Status  |
       | Buy some bread | Medium   | Ready   |
