@@ -6,8 +6,10 @@ Relish is a Java library that is designed to reduce the amount of code needed to
 
 There are currently two flavours of Relish:
 
--   `relish-selenide` For testing web applications. This requires the libraries `relish-core-....jar` and `relish-selenide-....jar`.
--   `relish-espresso` For testing Android applications. This requires the libraries `relish-core-....jar` and `relish-espresso-....aar`.
+-   `relish-selenide` For testing web applications.
+    This requires the libraries `relish-core-....jar` and `relish-selenide-....jar`.
+-   `relish-espresso` For testing Android applications.
+    This requires the libraries `relish-core-....jar` and `relish-espresso-....aar`.
 
 You can find the latest version of these libraries on the [releases page](https://github.com/dogriffiths/relish/releases).
 
