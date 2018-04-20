@@ -1,5 +1,6 @@
 package uk.co.blackpepper.relish.selenide;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 
@@ -40,6 +41,11 @@ public class RadioButtons extends InputWidget {
                 $(By.xpath(String.format("//label[contains(text(),'%s')]", option))).click();
             }
         }, 1000, 10);
+    }
+
+    @Override
+    public String getStringValue() {
+        return $$(selector).filter(Condition.selected).first().getValue();
     }
 
     private boolean radioExistsFor(String option)

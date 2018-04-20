@@ -75,4 +75,23 @@ public class SomeSteps
         editTaskPage.form().set(task.get(0));
         editTaskPage.form().saveButton().click();
     }
+
+    @When("^I edit the '([^']*)' task$")
+    public void iEditTheBuySomeMilkTask(String name)
+    {
+        taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(4).click();
+    }
+
+    @Then("^the edit form will contain$")
+    public void theEditFormWillContain(@Transpose List<TableRow> task)
+    {
+        editTaskPage.form().matches(task.get(0));
+    }
+
+    @When("^I save these changes$")
+    public void iSaveTheseChanges(@Transpose List<TableRow> task)
+    {
+        editTaskPage.form().set(task.get(0));
+        editTaskPage.form().saveButton().click();
+    }
 }

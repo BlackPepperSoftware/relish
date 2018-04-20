@@ -43,7 +43,12 @@ Feature: A list of tasks can be managed by the application
       | Buy some bread | Medium   | Ready   |
       | Buy some milk  | Low      | Waiting |
       | Buy some water | High     | Pending |
-    And I change the 'Buy some milk' task to
+    And I edit the 'Buy some milk' task
+    Then the edit form will contain
+      | Name     | Buy some milk |
+      | Priority | L             |
+      | Status   | waiting       |
+    When I save these changes
       | Name     | Buy some cream |
       | Priority | Medium         |
       | Status   | Done           |
