@@ -110,6 +110,9 @@ A `TableRow` is very similar to a `Map<String,String>` and it's designed specifi
 
 Now that we've begun to create our step, we'll need to fill out the code. We'll loop through each of the `TableRow` objects from the table, and for each one:
 
+1. Click on the /Add Task/ button
+2. Enter details into the /Add New Task/ form that match the =TableRow=
+3. Click the /Save/ button on the form and return to the front page
 
 This is how this is done in Relish:
 
@@ -154,7 +157,7 @@ The `set()` method accepts a `TableRow` object and uses it to update all of the 
 </tbody>
 </table>
 
-The `set()` method will convert the (only) column "Name" into camel-case, and look for a `name()` method on the `AddTaskPage` object. In our case, this `name()` method returns an `InputText` field, and Relish will tell the the `InputText` component to type in the strings "Buy some bread" and "Buy some milk" on each of the occasions that it visits the page.
+The `set()` method will convert the (only) column "Name" into camel-case, and look for a `name()` method on the `AddTaskPage` object. In our case, this `name()` method returns an `InputText` field, and Relish will tell the `InputText` component to type in the strings "Buy some bread" and "Buy some milk" on each of the occasions that it visits the page.
 
 If there had been multiple columns in the feature table, Relish would have looked for a matching component for each of them, and entered the data into each of the fields in the form.
 
