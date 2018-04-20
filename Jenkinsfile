@@ -37,6 +37,26 @@ pipeline {
                 }
             }
         }
+        stage('Publish') {
+            steps {
+                script {
+                    if (env.BRANCH_NAME == 'master') {
+                        sh "git tag -a 'v0.0.${BUILD_NUMBER}' -m 'Release v0.0.${BUILD_NUMBER}'"
+                        sh "git push --tags"
+                        sh "github-release release --user dogriffiths --repo relish --tag 'v0.0.${BUILD_NUMBER}' --name 'Relish' --description 'Version v0.0.${BUILD_NUMBER}' --pre-release"
+                        sh "cp relish-core/build/libs/relish-core-1.0-SNAPSHOT.jar 'relish-core-0.0.${BUILD_NUMBER}.jar'"
+                        sh "cp relish-selenide/build/libs/relish-selenide-1.0-SNAPSHOT.jar 'relish-selenide-0.0.${BUILD_NUMBER}.jar'"
+                        sh "cp relish-espresso/build/outputs/aar/relish-espresso-release.aar 'relish-espresso-0.0.${BUILD_NUMBER}.aar'"
+                        sh "github-release upload --user dogriffiths --repo relish --tag 'v0.0.${BUILD_NUMBER}' --name 'relish-core-0.0.${BUILD_NUMBER}.jar' --file 'relish-core-0.0.${BUILD_NUMBER}.jar'"
+                        sh "github-release upload --user dogriffiths --repo relish --tag 'v0.0.${BUILD_NUMBER}' --name 'relish-selenide-0.0.${BUILD_NUMBER}.jar' --file 'relish-selenide-0.0.${BUILD_NUMBER}.jar'"
+                        sh "github-release upload --user dogriffiths --repo relish --tag 'v0.0.${BUILD_NUMBER}' --name 'relish-espresso-0.0.${BUILD_NUMBER}.jar' --file 'relish-espresso-0.0.${BUILD_NUMBER}.aar'"
+                        sh "rm -f 'relish-core-0.0.${BUILD_NUMBER}.jar'"
+                        sh "rm -f 'relish-selenide-0.0.${BUILD_NUMBER}.jar'"
+                        sh "rm -f 'relish-espresso-0.0.${BUILD_NUMBER}.aar'"
+                    }
+                }
+            }
+        }
     }
     post {
         always {
