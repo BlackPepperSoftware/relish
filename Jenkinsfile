@@ -16,21 +16,23 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh 'if [ -f /tmp/myserver.pid ]; then (kill $(cat /tmp/myserver.pid) || echo "Old server gone"); fi'
-                    sh 'rm -f /tmp/myserver.pid'
-                    sh 'rm -f /tmp/myserver.lock'
-                    sh '/usr/local/sbin/daemonize ' +
-                            '-E BUILD_ID=dontKillMe ' +
-                            '-p /tmp/myserver.pid ' +
-                            '-l /tmp/myserver.lock ' +
-                            '-o /tmp/myserver.out ' +
-                            '-c "$PWD/examples/selenide/website" ' +
-                            '/usr/bin/python -m SimpleHTTPServer 2>&1 > /tmp/myserver.runout'
-                    if(isUnix()){
-                        sh './gradlew clean build check unitCoverageReport sonarqube --info --stacktrace'
-                    }
-                    else{
-                        bat 'gradlew.bat clean build check unitCoverageReport sonarqube --info --stacktrace'
+                    lock(resource: 'relish-dev') {
+                        sh 'if [ -f /tmp/myserver.pid ]; then (kill $(cat /tmp/myserver.pid) || echo "Old server gone"); fi'
+                        sh 'rm -f /tmp/myserver.pid'
+                        sh 'rm -f /tmp/myserver.lock'
+                        sh '/usr/local/sbin/daemonize ' +
+                                '-E BUILD_ID=dontKillMe ' +
+                                '-p /tmp/myserver.pid ' +
+                                '-l /tmp/myserver.lock ' +
+                                '-o /tmp/myserver.out ' +
+                                '-c "$PWD/examples/selenide/website" ' +
+                                '/usr/bin/python -m SimpleHTTPServer 2>&1 > /tmp/myserver.runout'
+                        if(isUnix()){
+                            sh './gradlew clean build check unitCoverageReport sonarqube --info --stacktrace'
+                        }
+                        else{
+                            bat 'gradlew.bat clean build check unitCoverageReport sonarqube --info --stacktrace'
+                        }
                     }
                 }
             }

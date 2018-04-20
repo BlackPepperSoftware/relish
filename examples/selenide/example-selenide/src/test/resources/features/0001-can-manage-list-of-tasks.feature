@@ -11,8 +11,8 @@ Feature: A list of tasks can be managed by the application
     Given I am on the task list
     When I choose to add these tasks
       | Name           | Priority | Status  |
-      | Buy some bread | High     | Ready   |
-      | Buy some milk  | Low      | Waiting |
+      | Buy some bread | H        | ready   |
+      | Buy some milk  | L        | waiting |
     Then I will see this on the list of tasks
       | Name           | Priority | Status  |
       | Buy some bread | High     | Ready   |
@@ -23,9 +23,9 @@ Feature: A list of tasks can be managed by the application
     Then the delete button is disabled
     When I choose to add these tasks
       | Name           | Priority |
-      | Buy some bread | High     |
-      | Buy some milk  | Medium   |
-      | Buy some water | Low      |
+      | Buy some bread | H        |
+      | Buy some milk  | M        |
+      | Buy some water | L        |
     And I will select these tasks
       | Name           | Priority | Select |
       | Buy some bread | High     | true   |
@@ -41,8 +41,8 @@ Feature: A list of tasks can be managed by the application
     When I choose to add these tasks
       | Name           | Priority | Status  |
       | Buy some bread | Medium   | Ready   |
-      | Buy some milk  | Low      | Waiting |
-      | Buy some water | High     | Pending |
+      | Buy some milk  | Low      | waiting |
+      | Buy some water | High     | pending |
     And I edit the 'Buy some milk' task
     Then the edit form will contain
       | Name     | Buy some milk |
@@ -50,8 +50,8 @@ Feature: A list of tasks can be managed by the application
       | Status   | waiting       |
     When I save these changes
       | Name     | Buy some cream |
-      | Priority | Medium         |
-      | Status   | Done           |
+      | Priority | M              |
+      | Status   | done           |
     Then I will see this on the list of tasks
       | Name           | Priority | Status  |
       | Buy some bread | Medium   | Ready   |
