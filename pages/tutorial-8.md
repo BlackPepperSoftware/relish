@@ -60,6 +60,8 @@ Now we've created our form component, we can greatly simplify the `AddTaskPage` 
         }
     }
 
+<p/>
+
     package com.example.components;
     
     import uk.co.blackpepper.relish.selenide.Page;
