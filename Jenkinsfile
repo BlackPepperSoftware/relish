@@ -17,6 +17,7 @@ pipeline {
             steps {
                 script {
                     lock(resource: 'relish-dev') {
+                        sh 'sleep 10'
                         sh 'if [ -f /tmp/myserver.pid ]; then (kill $(cat /tmp/myserver.pid) || echo "Old server gone"); fi'
                         sh 'rm -f /tmp/myserver.pid'
                         sh 'rm -f /tmp/myserver.lock'
