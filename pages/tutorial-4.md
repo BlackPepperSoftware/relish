@@ -72,7 +72,6 @@ We'll also need to create a class for our second page: the one for creating a ne
     import uk.co.blackpepper.relish.selenide.InputText;
     import uk.co.blackpepper.relish.selenide.Page;
     import uk.co.blackpepper.relish.selenide.SelenideWidget;
-    import uk.co.blackpepper.relish.selenide.Table;
     import org.openqa.selenium.By;
     
     public class AddTaskPage extends Page {

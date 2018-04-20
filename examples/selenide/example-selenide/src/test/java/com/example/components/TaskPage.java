@@ -3,9 +3,9 @@ package com.example.components;
 import org.openqa.selenium.By;
 
 import uk.co.blackpepper.relish.selenide.Checkbox;
-import uk.co.blackpepper.relish.selenide.Table;
 import uk.co.blackpepper.relish.selenide.Page;
 import uk.co.blackpepper.relish.selenide.SelenideWidget;
+import uk.co.blackpepper.relish.selenide.Table;
 
 public class TaskPage extends Page
 {
