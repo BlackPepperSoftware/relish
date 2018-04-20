@@ -60,7 +60,7 @@ public abstract class Component implements Getable {
      */
     public Component set(TableRow tableRow) {
         for (Map.Entry<String, String> entry : tableRow.entrySet()) {
-            Object result = null;
+            Object result;
             if (this instanceof WidgetContainer) {
                 result = ((WidgetContainer)this).getWidget(entry.getKey());
             } else {
@@ -101,7 +101,7 @@ public abstract class Component implements Getable {
         } catch (NoSuchMethodException nsme) {
             throw new IllegalStateException(format("Unable to find %s() for %s", methodName, this), nsme);
         } catch (InvocationTargetException ite) {
-            throw new IllegalStateException(format("Unable to execute %s() for %s", methodName, this), ite);
+            throw new IllegalStateException(format("Error executing %s() for %s", methodName, this), ite);
         }
     }
 
