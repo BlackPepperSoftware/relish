@@ -3,6 +3,10 @@ version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 
+apply plugin: 'maven'
+
+group = 'com.github.dogriffiths'
+
 sourceCompatibility = 1.7
 
 buildscript {
