@@ -1,5 +1,7 @@
 package uk.co.blackpepper.relish.selenide;
 
+import com.codeborne.selenide.WebDriverRunner;
+import org.openqa.selenium.WebDriver;
 import uk.co.blackpepper.relish.core.Component;
 import uk.co.blackpepper.relish.core.Widget;
 import com.codeborne.selenide.SelenideElement;
@@ -9,6 +11,7 @@ import org.openqa.selenium.StaleElementReferenceException;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
+import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
 public class SelenideWidget extends Widget<SelenideElement> {
     public SelenideWidget(By selector, Component parent) {
@@ -26,7 +29,16 @@ public class SelenideWidget extends Widget<SelenideElement> {
 
     @Override
     public void assertInvisible() {
-        get().shouldBe(visible);
+        attempt(() -> {
+            try {
+                get().shouldBe(not(visible));
+            } catch (ElementShould e) {
+                // Do not throw state element exception because it will mean that it is invisible
+                if (!(e.getCause() instanceof StaleElementReferenceException)) {
+                    throw e;
+                }
+            }
+        }, 500, 2);
     }
 
     @Override
@@ -60,5 +72,9 @@ public class SelenideWidget extends Widget<SelenideElement> {
     @Override
     public String getStringValue() {
         return get().getText().trim();
+    }
+
+    public WebDriver driver() {
+        return WebDriverRunner.getWebDriver();
     }
 }
