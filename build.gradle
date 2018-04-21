@@ -1,4 +1,4 @@
-group 'uk.co.blackpepper'
+//group 'uk.co.blackpepper'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
@@ -35,4 +35,10 @@ allprojects {
 
 dependencies {
     compile 'com.android.tools.build:gradle:2.3.0'
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.packaging = 'jar'
+    }
 }

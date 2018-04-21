@@ -1,9 +1,13 @@
-group 'uk.co.blackpepper'
+//group 'uk.co.blackpepper'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'org.sonarqube'
 apply plugin: 'jacoco'
+apply plugin: 'maven'
+
+group = 'com.github.dogriffiths'
+
 
 sourceCompatibility = 1.7
 
@@ -36,4 +40,10 @@ dependencies {
     compile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'junit', name: 'junit', version: '4.12'
     testCompile 'org.mockito:mockito-core:1.9.5'
+}
+
+install {
+    repositories.mavenInstaller {
+        pom.packaging = 'jar'
+    }
 }
