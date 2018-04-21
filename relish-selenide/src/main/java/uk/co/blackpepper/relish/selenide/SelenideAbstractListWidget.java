@@ -16,6 +16,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.$$;
+import static org.junit.Assert.assertEquals;
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
 public abstract class SelenideAbstractListWidget<T extends Widget> extends AbstractListWidget<SelenideElement,T>
@@ -53,4 +54,11 @@ public abstract class SelenideAbstractListWidget<T extends Widget> extends Abstr
     protected List<SelenideElement> items() {
         return new ArrayList<>($$(itemsSelector()));
     }
+
+    public void assertChildCount(int expectedCount, Predicate<T> predicate) {
+        attempt(() -> {
+            assertEquals(expectedCount, items().stream().map(this::createItem).filter(predicate).count());
+        }, 1000, 10);
+    }
+
 }
