@@ -33,22 +33,17 @@ public class Table extends SelenideAbstractListWidget<HtmlRow>
         super(element, parent);
     }
 
+    @Override
+    public By itemsSelector() {
+        return By.xpath("//tr[td]");
+    }
+
     public Table withCellComponent(String heading, Function<SelenideElement,SelenideWidget> factory) {
         Table clone = new Table(get(), getParent());
         HashMap<String, Function<SelenideElement, SelenideWidget>> newBuilders = new HashMap<>(builders);
         newBuilders.put(heading, factory);
         clone.builders = newBuilders;
         return clone;
-    }
-
-    @Override
-    protected List<SelenideElement> items()
-    {
-        return get().findElements(By.tagName("tr")).stream()
-            .map(e -> $(e))
-            // Ignore rows without TD elements
-            .filter(e -> !e.findElements(By.tagName("td")).isEmpty())
-            .collect(toList());
     }
 
     @Override
