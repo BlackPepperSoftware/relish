@@ -139,4 +139,15 @@ public abstract class AbstractListWidget<T,U extends Widget> extends Widget<T> {
     public Widget<T> scrollTo() {
         return widget.scrollTo();
     }
+    
+    public void assertChildCount(final int expectedSize) {
+        attempt(new Runnable() {
+
+            @Override
+            public void run() {
+                assertEquals(expectedSize, items().size());
+            }
+        }, 1000, 10);
+
+    }
 }
