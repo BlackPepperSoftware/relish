@@ -1,5 +1,6 @@
 package uk.co.blackpepper.relish.selenide;
 
+import org.openqa.selenium.Keys;
 import uk.co.blackpepper.relish.core.Component;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
@@ -18,13 +19,25 @@ public class InputText extends InputWidget {
     public void enterText(String text) {
         attempt(() -> {
             get().click();
-            get().clear();
-            get().sendKeys(text);
+            clear();
+            if ((text != null) && (text.length() > 0)) {
+                get().sendKeys(text);
+            }
         }, 500, 2);
     }
 
     @Override
     public void setStringValue(String value) {
         enterText(value);
+    }
+
+    public void clear() {
+        actions().click(get())
+                .sendKeys(Keys.END)
+                .keyDown(Keys.SHIFT)
+                .sendKeys(Keys.HOME)
+                .keyUp(Keys.SHIFT)
+                .sendKeys(Keys.BACK_SPACE)
+                .perform();
     }
 }
