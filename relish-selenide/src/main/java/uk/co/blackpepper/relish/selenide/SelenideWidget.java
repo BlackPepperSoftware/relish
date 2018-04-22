@@ -33,6 +33,10 @@ public class SelenideWidget extends Widget<SelenideElement> {
         actions().moveToElement(element, x, y).click().perform();
     }
 
+    public String data(String name) {
+        return get().getAttribute("data-" + name);
+    }
+
     @Override
     public void assertInvisible() {
         attempt(() -> {
