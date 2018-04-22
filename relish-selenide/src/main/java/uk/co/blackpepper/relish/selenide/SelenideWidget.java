@@ -28,6 +28,11 @@ public class SelenideWidget extends Widget<SelenideElement> {
         get().click();
     }
 
+    public void click(int x, int y) {
+        SelenideElement element = get();
+        actions().moveToElement(element, x, y).click().perform();
+    }
+
     @Override
     public void assertInvisible() {
         attempt(() -> {
