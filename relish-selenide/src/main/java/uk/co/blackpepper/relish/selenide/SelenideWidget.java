@@ -2,6 +2,7 @@ package uk.co.blackpepper.relish.selenide;
 
 import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
 import uk.co.blackpepper.relish.core.Component;
 import uk.co.blackpepper.relish.core.Widget;
 import com.codeborne.selenide.SelenideElement;
@@ -72,6 +73,10 @@ public class SelenideWidget extends Widget<SelenideElement> {
     @Override
     public String getStringValue() {
         return get().getText().trim();
+    }
+
+    public Actions actions() {
+        return new Actions(driver());
     }
 
     public WebDriver driver() {
