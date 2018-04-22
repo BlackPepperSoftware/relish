@@ -32,7 +32,9 @@ public class Page extends Component
             String currentUrl = getWebDriver().getCurrentUrl();
             try
             {
-                assertTrue(this.matchesUrl(new URL(currentUrl).getPath()));
+                assertTrue("Expected " + this + " to be visible",
+                        this.matchesUrl(new URL(currentUrl).getPath())
+                                || this.matchesUrl(new URL(currentUrl).toExternalForm()));
             }
             catch(MalformedURLException e)
             {
