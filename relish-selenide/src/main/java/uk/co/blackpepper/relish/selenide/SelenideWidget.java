@@ -15,12 +15,29 @@ import static com.codeborne.selenide.Selenide.$;
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
 public class SelenideWidget extends Widget<SelenideElement> {
+
+    private By selector;
+
     public SelenideWidget(By selector, Component parent) {
         this($(selector), parent);
+        this.selector = selector;
     }
 
     public SelenideWidget(SelenideElement peer, Component parent) {
         super(peer, parent);
+    }
+
+    @Override
+    public SelenideElement get() {
+        Component parent = getParent();
+        if (selector != null) {
+            if (parent != null) {
+                if (parent instanceof SelenideWidget) {
+                    return ((SelenideWidget)parent).get().$(selector);
+                }
+            }
+        }
+        return super.get();
     }
 
     @Override
