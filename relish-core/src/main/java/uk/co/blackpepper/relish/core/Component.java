@@ -90,7 +90,7 @@ public abstract class Component implements Getable {
         }, 2000, 3);
     }
 
-    private Object evaluateMethod(String methodName) {
+    protected Object evaluateMethod(String methodName) {
         Class<? extends Component> clazz = this.getClass();
         Method method = null;
         try {
