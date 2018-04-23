@@ -1,25 +1,22 @@
 package uk.co.blackpepper.relish.selenide;
 
-import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 
 import org.openqa.selenium.By;
 
-import uk.co.blackpepper.relish.core.Component;
 import uk.co.blackpepper.relish.core.AbstractListWidget;
-import uk.co.blackpepper.relish.core.Widget;
+import uk.co.blackpepper.relish.core.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.$$;
 import static org.junit.Assert.assertEquals;
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
-public abstract class SelenideAbstractListWidget<T extends Widget> extends AbstractListWidget<SelenideElement,T>
+public abstract class SelenideAbstractListWidget<T extends SelenideWidget> extends AbstractListWidget<SelenideElement, T>
 {
     public SelenideAbstractListWidget(By selector, Component parent)
     {
@@ -51,14 +48,26 @@ public abstract class SelenideAbstractListWidget<T extends Widget> extends Abstr
     public abstract By itemsSelector();
 
     @Override
-    protected List<SelenideElement> items() {
+    protected List<SelenideElement> items()
+    {
         return new ArrayList<>($$(itemsSelector()));
     }
 
-    public void assertChildCount(int expectedCount, Predicate<T> predicate) {
+    public void assertChildCount(int expectedCount, Predicate<T> predicate)
+    {
         attempt(() -> {
             assertEquals(expectedCount, items().stream().map(this::createItem).filter(predicate).count());
         }, 1000, 10);
     }
 
+    public void allShouldBe(Condition condition)
+    {
+        attempt(() -> {
+            for(SelenideElement element : items())
+            {
+                T item = createItem(element);
+                item.shouldBe(condition);
+            }
+        }, 1000, 3);
+    }
 }
