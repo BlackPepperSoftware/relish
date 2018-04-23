@@ -10,7 +10,15 @@ import java.util.Collection;
 
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
+/**
+ * The type Android utils.
+ */
 public class AndroidUtils {
+    /**
+     * Gets current activity.
+     *
+     * @return the current activity
+     */
     public static Activity getCurrentActivity() {
         if (Looper.myLooper() == Looper.getMainLooper()) {
             return getCurrentActivityOnMainThread();

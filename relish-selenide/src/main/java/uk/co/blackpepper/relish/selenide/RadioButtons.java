@@ -21,10 +21,19 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
+/**
+ * The type Radio buttons.
+ */
 public class RadioButtons extends InputWidget {
 
     private final By selector;
 
+    /**
+     * Instantiates a new Radio buttons.
+     *
+     * @param selector the selector
+     * @param parent   the parent
+     */
     public RadioButtons(By selector, Component parent) {
         super(selector, parent);
         this.selector = selector;

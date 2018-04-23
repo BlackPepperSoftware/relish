@@ -15,10 +15,18 @@ import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.junit.Assert.assertTrue;
 
 
+/**
+ * The type Page.
+ */
 public class Page extends Component
 {
     private final String path;
 
+    /**
+     * Instantiates a new Page.
+     *
+     * @param path the path
+     */
     public Page(String path)
     {
         super(null);
@@ -49,21 +57,38 @@ public class Page extends Component
         return null;
     }
 
+    /**
+     * Matches url boolean.
+     *
+     * @param currentUrl the current url
+     * @return the boolean
+     */
     protected boolean matchesUrl(String currentUrl)
     {
         return currentUrl.endsWith(getPath());
     }
 
+    /**
+     * Gets path.
+     *
+     * @return the path
+     */
     public String getPath()
     {
         return path;
     }
 
+    /**
+     * Refresh page.
+     */
     public void refreshPage()
     {
         Selenide.refresh();
     }
 
+    /**
+     * Launch.
+     */
     public void launch()
     {
         open(URI.create(Configuration.baseUrl).resolve(getPath()).toString());

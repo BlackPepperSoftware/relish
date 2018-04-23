@@ -22,25 +22,45 @@ import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 import static org.hamcrest.Matchers.not;
 
+/**
+ * The type Checkbox.
+ */
 public class Checkbox extends EspressoWidget {
     private static final List<String> FALSISH = Arrays.asList("NO", "F", "N", "OFF", "0", "DISABLED", "0.0", "FALSE");
 
+    /**
+     * Instantiates a new Checkbox.
+     *
+     * @param peer   the peer
+     * @param parent the parent
+     */
     public Checkbox(ViewInteraction peer, Component parent) {
         super(peer, parent);
     }
 
+    /**
+     * Check.
+     */
     public void check() {
         if (!isSelected()) {
             click();
         }
     }
 
+    /**
+     * Uncheck.
+     */
     public void uncheck() {
         if (isSelected()) {
             click();
         }
     }
 
+    /**
+     * Assert checked.
+     *
+     * @param isChecked the is checked
+     */
     public void assertChecked(final boolean isChecked) {
         assertVisible();
         attempt(new Runnable() {
@@ -60,6 +80,11 @@ public class Checkbox extends EspressoWidget {
         return isSelected() ? "true" : "false";
     }
 
+    /**
+     * Is selected boolean.
+     *
+     * @return the boolean
+     */
     public boolean isSelected() {
         assertVisible();
         try {

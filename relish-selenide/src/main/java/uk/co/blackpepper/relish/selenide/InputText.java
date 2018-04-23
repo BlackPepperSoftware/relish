@@ -7,15 +7,35 @@ import org.openqa.selenium.By;
 
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
+/**
+ * The type Input text.
+ */
 public class InputText extends InputWidget {
+    /**
+     * Instantiates a new Input text.
+     *
+     * @param selector the selector
+     * @param parent   the parent
+     */
     public InputText(By selector, Component parent) {
         super(selector, parent);
     }
 
+    /**
+     * Instantiates a new Input text.
+     *
+     * @param element the element
+     * @param parent  the parent
+     */
     public InputText(SelenideElement element, Component parent) {
         super(element, parent);
     }
 
+    /**
+     * Enter text.
+     *
+     * @param text the text
+     */
     public void enterText(String text) {
         attempt(() -> {
             get().click();
@@ -31,6 +51,9 @@ public class InputText extends InputWidget {
         enterText(value);
     }
 
+    /**
+     * Clear.
+     */
     public void clear() {
         actions().click(get())
                 .sendKeys(Keys.END)

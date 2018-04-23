@@ -15,7 +15,16 @@ import static android.support.test.espresso.matcher.ViewMatchers.isEnabled;
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 import static org.hamcrest.Matchers.not;
 
+/**
+ * The type Espresso widget.
+ */
 public class EspressoWidget extends Widget<ViewInteraction> {
+    /**
+     * Instantiates a new Espresso widget.
+     *
+     * @param peer   the peer
+     * @param parent the parent
+     */
     public EspressoWidget(ViewInteraction peer, Component parent) {
         super(peer, parent);
     }

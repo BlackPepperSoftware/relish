@@ -28,7 +28,7 @@ public abstract class Component implements Getable {
 
     /**
      * Gets parent -- the component that contains this one.
-     *
+     * <p>
      * The parent may be null for containers, like pages and screens.
      *
      * @return the component containing this
@@ -90,6 +90,12 @@ public abstract class Component implements Getable {
         }, 2000, 3);
     }
 
+    /**
+     * Evaluate method object.
+     *
+     * @param methodName the method name
+     * @return the object
+     */
     protected Object evaluateMethod(String methodName) {
         Class<? extends Component> clazz = this.getClass();
         Method method = null;

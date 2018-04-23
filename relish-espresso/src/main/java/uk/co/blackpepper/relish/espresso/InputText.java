@@ -12,7 +12,16 @@ import org.hamcrest.Matcher;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 
+/**
+ * The type Input text.
+ */
 public class InputText extends EspressoWidget {
+    /**
+     * Instantiates a new Input text.
+     *
+     * @param peer   the peer
+     * @param parent the parent
+     */
     public InputText(ViewInteraction peer, Component parent) {
         super(peer, parent);
     }
@@ -27,6 +36,11 @@ public class InputText extends EspressoWidget {
         enterText(s);
     }
 
+    /**
+     * Enter text.
+     *
+     * @param text the text
+     */
     public void enterText(String text) {
         click();
         clearText();

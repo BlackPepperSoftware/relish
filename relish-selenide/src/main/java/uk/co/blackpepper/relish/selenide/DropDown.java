@@ -16,11 +16,26 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
+/**
+ * The type Drop down.
+ */
 public class DropDown extends InputWidget {
+    /**
+     * Instantiates a new Drop down.
+     *
+     * @param selector the selector
+     * @param parent   the parent
+     */
     public DropDown(By selector, Component parent) {
         super(selector, parent);
     }
 
+    /**
+     * Instantiates a new Drop down.
+     *
+     * @param element the element
+     * @param parent  the parent
+     */
     public DropDown(SelenideElement element, Component parent) {
         super(element, parent);
     }
@@ -39,6 +54,11 @@ public class DropDown extends InputWidget {
         }, 1000, 10);
     }
 
+    /**
+     * Assert has options.
+     *
+     * @param options the options
+     */
     public void assertHasOptions(List<String> options)
     {
         assertVisible();
@@ -49,6 +69,11 @@ public class DropDown extends InputWidget {
         }, 1000, 10);
     }
 
+    /**
+     * Assert selected.
+     *
+     * @param option the option
+     */
     public void assertSelected(String option)
     {
         assertVisible();

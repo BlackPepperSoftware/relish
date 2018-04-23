@@ -15,15 +15,30 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
+/**
+ * The type Selenide widget.
+ */
 public class SelenideWidget extends Widget<SelenideElement> {
 
     private By selector;
 
+    /**
+     * Instantiates a new Selenide widget.
+     *
+     * @param selector the selector
+     * @param parent   the parent
+     */
     public SelenideWidget(By selector, Component parent) {
         this($(selector), parent);
         this.selector = selector;
     }
 
+    /**
+     * Instantiates a new Selenide widget.
+     *
+     * @param peer   the peer
+     * @param parent the parent
+     */
     public SelenideWidget(SelenideElement peer, Component parent) {
         super(peer, parent);
     }
@@ -46,11 +61,23 @@ public class SelenideWidget extends Widget<SelenideElement> {
         get().click();
     }
 
+    /**
+     * Click.
+     *
+     * @param x the x
+     * @param y the y
+     */
     public void click(int x, int y) {
         SelenideElement element = get();
         actions().moveToElement(element, x, y).click().perform();
     }
 
+    /**
+     * Data string.
+     *
+     * @param name the name
+     * @return the string
+     */
     public String data(String name) {
         return get().getAttribute("data-" + name);
     }
@@ -81,6 +108,11 @@ public class SelenideWidget extends Widget<SelenideElement> {
         }
     }
 
+    /**
+     * Should be.
+     *
+     * @param condition the condition
+     */
     public void shouldBe(Condition condition) {
         get().shouldBe(condition);
     }
@@ -106,10 +138,20 @@ public class SelenideWidget extends Widget<SelenideElement> {
         return get().getText().trim();
     }
 
+    /**
+     * Actions actions.
+     *
+     * @return the actions
+     */
     public Actions actions() {
         return new Actions(driver());
     }
 
+    /**
+     * Driver web driver.
+     *
+     * @return the web driver
+     */
     public WebDriver driver() {
         return WebDriverRunner.getWebDriver();
     }

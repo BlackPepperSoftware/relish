@@ -19,7 +19,7 @@ public abstract class AbstractListWidget<T,U extends Widget> extends Widget<T> {
     /**
      * Instantiates a new Widget.
      *
-     * @param widget   the widget for this list
+     * @param widget the widget for this list
      * @param parent the parent
      */
     public AbstractListWidget(Widget<T> widget, Component parent) {
@@ -31,11 +31,21 @@ public abstract class AbstractListWidget<T,U extends Widget> extends Widget<T> {
         this.widget = widget;
     }
 
+    /**
+     * Length int.
+     *
+     * @return the int
+     */
     protected int length()
     {
         return items().size();
     }
 
+    /**
+     * Matches.
+     *
+     * @param assertionValues the assertion values
+     */
     public void matches(final List assertionValues) {
         attempt(new Runnable() {
 
@@ -55,6 +65,9 @@ public abstract class AbstractListWidget<T,U extends Widget> extends Widget<T> {
         }, 500, 10);
     }
 
+    /**
+     * Assert empty.
+     */
     public void assertEmpty() {
         attempt(new Runnable() {
 
@@ -66,6 +79,11 @@ public abstract class AbstractListWidget<T,U extends Widget> extends Widget<T> {
         }, 500, 10);
     }
 
+    /**
+     * Set.
+     *
+     * @param setValues the set values
+     */
     public void set(final List setValues) {
         attempt(new Runnable()
         {
@@ -84,6 +102,12 @@ public abstract class AbstractListWidget<T,U extends Widget> extends Widget<T> {
         }, 500, 10);
     }
 
+    /**
+     * Get u.
+     *
+     * @param i the
+     * @return the u
+     */
     protected U get(int i)
     {
         List<T> rows = items();
@@ -95,8 +119,19 @@ public abstract class AbstractListWidget<T,U extends Widget> extends Widget<T> {
         return createItem(rows.get(i));
     }
 
+    /**
+     * Create item u.
+     *
+     * @param e the e
+     * @return the u
+     */
     protected abstract U createItem(T e);
 
+    /**
+     * Items list.
+     *
+     * @return the list
+     */
     protected abstract List<T> items();
 
     @Override
@@ -139,7 +174,12 @@ public abstract class AbstractListWidget<T,U extends Widget> extends Widget<T> {
     public Widget<T> scrollTo() {
         return widget.scrollTo();
     }
-    
+
+    /**
+     * Assert child count.
+     *
+     * @param expectedSize the expected size
+     */
     public void assertChildCount(final int expectedSize) {
         attempt(new Runnable() {
 

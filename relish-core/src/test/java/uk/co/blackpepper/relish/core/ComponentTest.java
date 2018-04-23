@@ -12,11 +12,20 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+/**
+ * The type Component test.
+ */
 public class ComponentTest
 {
+    /**
+     * The Exception.
+     */
     @Rule
     public final ExpectedException exception = ExpectedException.none();
 
+    /**
+     * Can get values from string methods.
+     */
     @Test
     public void canGetValuesFromStringMethods()
     {
@@ -36,6 +45,9 @@ public class ComponentTest
         assertEquals("I am B", component.get("b"));
     }
 
+    /**
+     * Can set value on sub components.
+     */
     @Test
     public void canSetValueOnSubComponents()
     {
@@ -52,6 +64,9 @@ public class ComponentTest
         assertEquals(component.subComponent2.getStringValue(), "Value 2!");
     }
 
+    /**
+     * Can set value on sub components in widget containers.
+     */
     @Test
     public void canSetValueOnSubComponentsInWidgetContainers()
     {
@@ -69,6 +84,9 @@ public class ComponentTest
         assertEquals(component.innerWidget2.getStringValue(), "Value B!");
     }
 
+    /**
+     * Can get the parent out of the component.
+     */
     @Test
     public void canGetTheParentOutOfTheComponent()
     {
@@ -77,6 +95,9 @@ public class ComponentTest
         assertEquals(exampleComponent.getParent(), parent);
     }
 
+    /**
+     * Can get the string value of a sub component by name.
+     */
     @Test
     public void canGetTheStringValueOfASubComponentByName()
     {
@@ -85,6 +106,9 @@ public class ComponentTest
         assertEquals("Val2", component.get("subComponent2"));
     }
 
+    /**
+     * Cannot set the value of a sub thing if it is not a widget.
+     */
     @Test
     public void cannotSetTheValueOfASubThingIfItIsNotAWidget()
     {
@@ -102,6 +126,9 @@ public class ComponentTest
         component.set(tableRow);
     }
 
+    /**
+     * Can match values on sub components.
+     */
     @Test
     public void canMatchValuesOnSubComponents()
     {
@@ -119,6 +146,9 @@ public class ComponentTest
         component.matches(tableRow);
     }
 
+    /**
+     * If match against table row fails it will throw the correct exception.
+     */
     @Test
     public void ifMatchAgainstTableRowFailsItWillThrowTheCorrectException()
     {
@@ -139,6 +169,9 @@ public class ComponentTest
         component.matches(tableRow);
     }
 
+    /**
+     * Fail if try to access private sub component.
+     */
     @Test
     public void failIfTryToAccessPrivateSubComponent() {
         ExampleComponent component = new ExampleComponent(null);
@@ -157,6 +190,9 @@ public class ComponentTest
         }
     }
 
+    /**
+     * Fail if try to access non existent sub component.
+     */
     @Test
     public void failIfTryToAccessNonExistentSubComponent() {
         ExampleComponent component = new ExampleComponent(null);
@@ -175,6 +211,9 @@ public class ComponentTest
         }
     }
 
+    /**
+     * Fail if accessing sub component throws exception.
+     */
     @Test
     public void failIfAccessingSubComponentThrowsException() {
         ExampleComponent component = new ExampleComponent(null);
@@ -194,10 +233,21 @@ public class ComponentTest
     }
 }
 
+/**
+ * The type Example input component.
+ */
 class ExampleInputComponent extends Widget
 {
+    /**
+     * The Value.
+     */
     public String value;
 
+    /**
+     * Instantiates a new Example input component.
+     *
+     * @param parent the parent
+     */
     public ExampleInputComponent(Component parent)
     {
         super(null, parent);
@@ -249,14 +299,27 @@ class ExampleInputComponent extends Widget
     }
 }
 
+/**
+ * The type Example component with a component like method that does not return a component.
+ */
 class ExampleComponentWithAComponentLikeMethodThatDoesNotReturnAComponent extends Component
 {
 
+    /**
+     * Instantiates a new Example component with a component like method that does not return a component.
+     *
+     * @param parent the parent
+     */
     public ExampleComponentWithAComponentLikeMethodThatDoesNotReturnAComponent(Component parent)
     {
         super(parent);
     }
 
+    /**
+     * Not a sub component string.
+     *
+     * @return the string
+     */
     public String notASubComponent()
     {
         return "I am not a sub-component";
@@ -274,11 +337,25 @@ class ExampleComponentWithAComponentLikeMethodThatDoesNotReturnAComponent extend
     }
 }
 
+/**
+ * The type Example widget container.
+ */
 class ExampleWidgetContainer extends Component implements WidgetContainer
 {
+    /**
+     * The Inner widget 1.
+     */
     public ExampleInputComponent innerWidget1 = new ExampleInputComponent(mock(Component.class));
+    /**
+     * The Inner widget 2.
+     */
     public ExampleInputComponent innerWidget2 = new ExampleInputComponent(mock(Component.class));
 
+    /**
+     * Instantiates a new Example widget container.
+     *
+     * @param parent the parent
+     */
     public ExampleWidgetContainer(Component parent)
     {
         super(parent);
@@ -310,10 +387,22 @@ class ExampleWidgetContainer extends Component implements WidgetContainer
     }
 }
 
+/**
+ * The type Example component.
+ */
 class ExampleComponent extends Component
 {
+    /**
+     * The Sub component 1.
+     */
     public ExampleInputComponent subComponent1 = new ExampleInputComponent(mock(Component.class));
+    /**
+     * The Sub component 2.
+     */
     public ExampleInputComponent subComponent2 = new ExampleInputComponent(mock(Component.class));
+    /**
+     * The Private component.
+     */
     public ExampleInputComponent privateComponent = new ExampleInputComponent(mock(Component.class));
 
     /**
@@ -332,11 +421,21 @@ class ExampleComponent extends Component
 
     }
 
+    /**
+     * Sub component 1 component.
+     *
+     * @return the component
+     */
     public Component subComponent1()
     {
         return subComponent1;
     }
 
+    /**
+     * Sub component 2 component.
+     *
+     * @return the component
+     */
     public Component subComponent2()
     {
         return subComponent2;
@@ -347,6 +446,11 @@ class ExampleComponent extends Component
         return privateComponent;
     }
 
+    /**
+     * Erroring method component.
+     *
+     * @return the component
+     */
     public Component erroringMethod()
     {
         throw new RuntimeException("Bad stuff happened!");

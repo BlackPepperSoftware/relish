@@ -8,10 +8,19 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 
+/**
+ * The type Widget test.
+ */
 public class WidgetTest {
+    /**
+     * The Expected exception.
+     */
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
+    /**
+     * A widget must have a parent.
+     */
     @Test
     public void aWidgetMustHaveAParent() {
         expectedException.expect(IllegalArgumentException.class);
@@ -19,6 +28,9 @@ public class WidgetTest {
         create("A peer", null);
     }
 
+    /**
+     * Parent must be visible.
+     */
     @Test
     public void parentMustBeVisible() {
         Component parent = mock(Component.class);
@@ -27,6 +39,9 @@ public class WidgetTest {
         create("A peer", parent);
     }
 
+    /**
+     * Can get the same peer back.
+     */
     @Test
     public void canGetTheSamePeerBack() {
         Component parent = mock(Component.class);

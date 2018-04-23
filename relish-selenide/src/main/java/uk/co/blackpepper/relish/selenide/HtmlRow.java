@@ -18,21 +18,44 @@ import java.util.function.Function;
 import static com.codeborne.selenide.Selenide.$;
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 
+/**
+ * The type Html row.
+ */
 public class HtmlRow extends SelenideWidget implements WidgetContainer
 {
     private final List<String> headings;
     private Map<String,Function<SelenideElement,SelenideWidget>> builders = new HashMap<>();
 
+    /**
+     * Instantiates a new Html row.
+     *
+     * @param selector the selector
+     * @param parent   the parent
+     * @param headings the headings
+     */
     public HtmlRow(By selector, Component parent, List<String> headings) {
         super(selector, parent);
         this.headings = headings;
     }
 
+    /**
+     * Instantiates a new Html row.
+     *
+     * @param element  the element
+     * @param parent   the parent
+     * @param headings the headings
+     */
     public HtmlRow(SelenideElement element, Component parent, List<String> headings) {
         super(element, parent);
         this.headings = headings;
     }
 
+    /**
+     * With builders html row.
+     *
+     * @param builders the builders
+     * @return the html row
+     */
     public HtmlRow withBuilders(Map<String,Function<SelenideElement,SelenideWidget>> builders) {
         HtmlRow clone = new HtmlRow(get(), getParent(), headings);
         clone.builders = builders;
@@ -59,6 +82,12 @@ public class HtmlRow extends SelenideWidget implements WidgetContainer
         return createWidgetFor(key, $(cells.get(headingPos)));
     }
 
+    /**
+     * Gets widget.
+     *
+     * @param column the column
+     * @return the widget
+     */
     public Widget getWidget(int column) {
         String heading = (headings.size() > column) ? headings.get(column) : "" + column;
         return createWidgetFor(heading, $(cells().get(column)));
@@ -72,6 +101,11 @@ public class HtmlRow extends SelenideWidget implements WidgetContainer
         return new SelenideWidget(rowElement, this);
     }
 
+    /**
+     * Columns int.
+     *
+     * @return the int
+     */
     public int columns() {
         return cells().size();
     }

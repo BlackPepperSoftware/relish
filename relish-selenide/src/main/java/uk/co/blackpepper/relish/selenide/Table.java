@@ -19,15 +19,30 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+/**
+ * The type Table.
+ */
 public class Table extends SelenideAbstractListWidget<HtmlRow>
 {
     private Map<String,Function<SelenideElement,SelenideWidget>> builders = new HashMap<>();
 
+    /**
+     * Instantiates a new Table.
+     *
+     * @param selector the selector
+     * @param parent   the parent
+     */
     public Table(By selector, Component parent)
     {
         super(selector, parent);
     }
 
+    /**
+     * Instantiates a new Table.
+     *
+     * @param element the element
+     * @param parent  the parent
+     */
     public Table(SelenideElement element, Component parent)
     {
         super(element, parent);
@@ -38,6 +53,13 @@ public class Table extends SelenideAbstractListWidget<HtmlRow>
         return By.xpath("//tr[td]");
     }
 
+    /**
+     * With cell component table.
+     *
+     * @param heading the heading
+     * @param factory the factory
+     * @return the table
+     */
     public Table withCellComponent(String heading, Function<SelenideElement,SelenideWidget> factory) {
         Table clone = new Table(get(), getParent());
         HashMap<String, Function<SelenideElement, SelenideWidget>> newBuilders = new HashMap<>(builders);

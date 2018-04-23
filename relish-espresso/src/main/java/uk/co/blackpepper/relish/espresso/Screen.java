@@ -8,9 +8,17 @@ import org.junit.Assert;
 import static uk.co.blackpepper.relish.core.TestUtils.attempt;
 import static uk.co.blackpepper.relish.espresso.AndroidUtils.getCurrentActivity;
 
+/**
+ * The type Screen.
+ */
 public class Screen extends Component {
     private Class<? extends Activity> activity;
 
+    /**
+     * Instantiates a new Screen.
+     *
+     * @param activity the activity
+     */
     public Screen(Class<? extends Activity> activity) {
         super(null);
         this.activity = activity;
@@ -26,6 +34,9 @@ public class Screen extends Component {
         throw new IllegalStateException("Cannot get string value for " + this);
     }
 
+    /**
+     * Press back.
+     */
     public void pressBack() {
         Espresso.pressBack();
     }
