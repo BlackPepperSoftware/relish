@@ -21,16 +21,15 @@ You can find the latest version of these libraries on the [releases page](https:
 The libraries can be downloaded through http://jitpack.io, so, for example, this is how you might get them in gradle:
 
 #+BEGIN_SRC groovy
-  buildscript {
-    repositories {
-      mavenLocal()
-      ....
-      maven { url 'http://repo1.maven.org/maven2' }
-    }
-    dependencies {
-      ....
-      classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
-    }
+  repositories {
+    mavenCentral()
+    ....
+    maven { url 'https://jitpack.io' }
+  }
+
+  dependencies {
+    ....
+    testCompile 'com.github.dogriffiths:relish:0.0.119' # For version 0.0.119
   }
 #+END_SRC
 
