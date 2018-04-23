@@ -9,5 +9,31 @@ Relish is a Java library that is designed to reduce the amount of code needed to
 
 There are currently two flavours of Relish:
 
-- =relish-selenide= For testing web applications
-- =relish-espresso= For testing Android applications
+* =relish-selenide= For testing web applications.
+  This requires the libraries `relish-core-....jar` and `relish-selenide-....jar`.
+* =relish-espresso= For testing Android applications.
+  This requires the libraries `relish-core-....jar` and `relish-espresso-....aar`.
+
+You can find the latest version of these libraries on the [releases page](https://github.com/dogriffiths/relish/releases).
+
+* Getting the libraries for Maven/gradle:
+
+The libraries can be downloaded through http://jitpack.io, so, for example, this is how you might get them in gradle:
+
+#+BEGIN_SRC groovy
+  buildscript {
+    repositories {
+      mavenLocal()
+      ....
+      maven { url 'http://repo1.maven.org/maven2' }
+    }
+    dependencies {
+      ....
+      classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
+    }
+  }
+#+END_SRC
+
+# Documentation
+
+* [[./pages/tutorial.html][Tutorial]]

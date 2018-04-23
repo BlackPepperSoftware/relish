@@ -13,6 +13,22 @@ There are currently two flavours of Relish:
 
 You can find the latest version of these libraries on the [releases page](https://github.com/dogriffiths/relish/releases).
 
+# Getting the libraries for Maven/gradle:
+
+The libraries can be downloaded through http://jitpack.io, so, for example, this is how you might get them in gradle:
+
+    buildscript {
+        repositories {
+            mavenLocal()
+            ....
+            maven { url 'http://repo1.maven.org/maven2' }
+        }
+        dependencies {
+            ....
+            classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6.2"
+        }
+    }
+
 # Documentation
 
 -   [Tutorial](./pages/tutorial.html)
