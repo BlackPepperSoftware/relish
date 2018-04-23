@@ -174,14 +174,14 @@ Adding all three steps, brings us to this version of the `SomeSteps.java` file:
         @Then("^the edit form will contain$")
         public void theEditFormWillContain(@Transpose List<TableRow> task)
         {
-            editTaskPage.form().matches(task.get(0));
+            editTaskPage.matches(task.get(0));
         }
     
         @When("^I save these changes$")
         public void iSaveTheseChanges(@Transpose List<TableRow> task)
         {
-            editTaskPage.form().set(task.get(0));
-            editTaskPage.form().saveButton().click();
+            editTaskPage.set(task.get(0));
+            editTaskPage.saveButton().click();
         }
     }
 

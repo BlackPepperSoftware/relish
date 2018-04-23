@@ -155,11 +155,22 @@ So that `SomeSteps.java` will now be:
         {
             taskPage.deleteButton().assertDisabled();
         }
-    
-        @When("^I change the '([^']*)' task to$")
-        public void iChangeTheTaskTo(String name, @Transpose List<TableRow> task)
+
+        @When("^I edit the '([^']*)' task$")
+        public void iEditTheBuyTask(String name)
         {
             taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(4).click();
+        }
+    
+        @Then("^the edit form will contain$")
+        public void theEditFormWillContain(@Transpose List<TableRow> task)
+        {
+            editTaskPage.form().matches(task.get(0));
+        }
+    
+        @When("^I save these changes$")
+        public void iSaveTheseChanges(@Transpose List<TableRow> task)
+        {
             editTaskPage.form().set(task.get(0));
             editTaskPage.form().saveButton().click();
         }
@@ -218,8 +229,8 @@ And we can then update our feature file to add `status` values to be set and che
         Given I am on the task list
         When I choose to add these tasks
           | Name           | Priority | Status  |
-          | Buy some bread | High     | Ready   |
-          | Buy some milk  | Low      | Waiting |
+          | Buy some bread | H        | ready   |
+          | Buy some milk  | L        | waiting |
         Then I will see this on the list of tasks
           | Name           | Priority | Status  |
           | Buy some bread | High     | Ready   |
@@ -230,9 +241,9 @@ And we can then update our feature file to add `status` values to be set and che
         Then the delete button is disabled
         When I choose to add these tasks
           | Name           | Priority |
-          | Buy some bread | High     |
-          | Buy some milk  | Medium   |
-          | Buy some water | Low      |
+          | Buy some bread | H        |
+          | Buy some milk  | M        |
+          | Buy some water | L        |
         And I will select these tasks
           | Name           | Priority | Select |
           | Buy some bread | High     | true   |
@@ -247,13 +258,13 @@ And we can then update our feature file to add `status` values to be set and che
         Given I am on the task list
         When I choose to add these tasks
           | Name           | Priority | Status  |
-          | Buy some bread | Medium   | Ready   |
-          | Buy some milk  | Low      | Waiting |
-          | Buy some water | High     | Pending |
+          | Buy some bread | M        | ready   |
+          | Buy some milk  | L        | waiting |
+          | Buy some water | H        | pending |
         And I change the 'Buy some milk' task to
           | Name     | Buy some cream |
-          | Priority | Medium         |
-          | Status   | Done           |
+          | Priority | M              |
+          | Status   | done           |
         Then I will see this on the list of tasks
           | Name           | Priority | Status  |
           | Buy some bread | Medium   | Ready   |
@@ -261,5 +272,23 @@ And we can then update our feature file to add `status` values to be set and che
           | Buy some water | High     | Pending |
 
 ![img](../images/tutorial-run.gif)
+
+And other than changing this in `SomeSteps.java`:
+
+    taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(3).click();
+
+to
+
+    taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(4).click();
+
+and this in `TaskPage.java`:
+
+    .withCellComponent("3", (tdCell) -> new SelenideWidget(tdCell.$("button"), this))
+
+to
+
+    .withCellComponent("4", (tdCell) -> new SelenideWidget(tdCell.$("button"), this))
+
+(so that we can still click the `Edit` button, which is now in the fourth column) we're done.
 
 &lt; [Editing tasks](./tutorial-7.html) | ^ [Tutorial](./tutorial.html)

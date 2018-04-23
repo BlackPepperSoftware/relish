@@ -40,9 +40,9 @@ Feature: A list of tasks can be managed by the application
     Given I am on the task list
     When I choose to add these tasks
       | Name           | Priority | Status  |
-      | Buy some bread | Medium   | Ready   |
-      | Buy some milk  | Low      | waiting |
-      | Buy some water | High     | pending |
+      | Buy some bread | M        | Ready   |
+      | Buy some milk  | L        | waiting |
+      | Buy some water | H        | pending |
     And I edit the 'Buy some milk' task
     Then the edit form will contain
       | Name     | Buy some milk |
