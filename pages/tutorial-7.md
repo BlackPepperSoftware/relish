@@ -10,12 +10,16 @@ Which brings us to the final scenario for this feature: editing tasks
       Given I am on the task list
       When I choose to add these tasks
         | Name           | Priority |
-        | Buy some bread | Medium   |
-        | Buy some milk  | Low      |
-        | Buy some water | High     |
-      And I change the 'Buy some milk' task to
+        | Buy some bread | M        |
+        | Buy some milk  | L        |
+        | Buy some water | H        |
+      And I edit the 'Buy some milk' task
+      Then the edit form will contain
+        | Name     | Buy some milk |
+        | Priority | L             |
+      When I save these changes
         | Name     | Buy some cream |
-        | Priority | Medium         |
+        | Priority | M              |
       Then I will see this on the list of tasks
         | Name           | Priority |
         | Buy some bread | Medium   |
@@ -69,13 +73,17 @@ By default, a column without a heading if given a virtual heading that matches t
             ;
     }
 
-The only step we need to implement for our "Edit" scenario is this one:
+We'll need to implement these three steps:
 
-    And I change the 'Buy some milk' task to
+    And I edit the 'Buy some milk' task
+    Then the edit form will contain
+      | Name     | Buy some milk |
+      | Priority | L             |
+    When I save these changes
       | Name     | Buy some cream |
-      | Priority | Medium         |
+      | Priority | M              |
 
-That means we need a way to access the edit button for the row with name `Buy some milk`. We can do that with a method on `Table` called `findFirst(...)`:
+To implement the `I edit the.... task` step will need to get access to the `Edit` button of the table row with the correct name value. We can find the correct `Table` row by using a method called `findFirst(...)`, which uses an expression to find the first matching row:
 
     taskPage.taskTable().findFirst(row -> row.get("name").equals("Buy some milk"))
 
@@ -83,7 +91,9 @@ This will return a Relish `HtmlRow` test component for the first row it finds wi
 
     taskPage.taskTable().findFirst(row -> row.get("name").equals("Buy some milk")).getWidget(3).click();
 
-Adding this to a full implementation of the step, brings us to this version of the `SomeSteps.java` file:
+For other two steps (`the edit form will contain...` and `I save these changes...`) we can just call the `match(...)`, `set(...)` and `click()` methods we've already seen.
+
+Adding all three steps, brings us to this version of the `SomeSteps.java` file:
 
     package com.example.steps;
     
@@ -154,13 +164,24 @@ Adding this to a full implementation of the step, brings us to this version of t
         {
             taskPage.deleteButton().assertDisabled();
         }
-    
-        @When("^I change the '([^']*)' task to$")
-        public void iChangeTheTaskTo(String name, @Transpose List<TableRow> task)
+
+        @When("^I edit the '([^']*)' task$")
+        public void iEditTheBuyTask(String name)
         {
-            taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(3).click();
-            editTaskPage.set(task.get(0));
-            editTaskPage.saveButton().click();
+            taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(4).click();
+        }
+    
+        @Then("^the edit form will contain$")
+        public void theEditFormWillContain(@Transpose List<TableRow> task)
+        {
+            editTaskPage.form().matches(task.get(0));
+        }
+    
+        @When("^I save these changes$")
+        public void iSaveTheseChanges(@Transpose List<TableRow> task)
+        {
+            editTaskPage.form().set(task.get(0));
+            editTaskPage.form().saveButton().click();
         }
     }
 

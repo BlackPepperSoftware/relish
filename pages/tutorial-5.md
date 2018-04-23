@@ -4,7 +4,7 @@
 
 &lt; [Adding tasks](./tutorial-4.html) | ^ [Tutorial](./tutorial.html) | [Deleting tasks](./tutorial-6.html) &gt;
 
-Now let's see what happens if there's a sudden change or requirements. Let's say that the customer suddenly decides that instead of just recording the *name* against each task, we also want to record a *priority* value of *High*, *Medium* or *Low*.
+Now let's see what happens if there's a sudden change or requirements. Let's say that the customer suddenly decides that instead of just recording the *name* against each task, we also want to record a *priority* value of `H` (*High*), `M` (*Medium*) or `L` (*Low*).
 
 ![img](../images/tasks-with-priorities.png)
 
@@ -16,12 +16,14 @@ Let's look at what kind of impact that has on our tests. First, let's edit the f
       Given I am on the task list
       When I choose to add these tasks
         | Name           | Priority |
-        | Buy some bread | High     |
-        | Buy some milk  | Low      |
+        | Buy some bread | H        |
+        | Buy some milk  | L        |
       Then I will see this on the list of tasks
         | Name           | Priority |
         | Buy some bread | High     |
         | Buy some milk  | Low      |
+
+*Note*: when we *add* tasks we are specifying the value (*H*, *M* or *L*) but when we check what we want on the screen, we using the descriptions (*High*, *Medium* or *Low*). That's because we're going to send the *values* to the dropdown list on the screen, but the *descriptions* will appear in the table of tasks. Relish will usually cope with descriptions on `<select/>` fields, but it's better to specify values in your tests if they are going to be used to update `<select/>` fields or radio buttons.
 
 What do we need to do to handle the new *Priority* value? We will begin by adding a new field to the `AddTaskPage` class:
 
@@ -60,8 +62,8 @@ What else do we need to do? Well actually, **nothing**. Let's review the updated
       Given I am on the task list
       When I choose to add these tasks
         | Name           | Priority |
-        | Buy some bread | High     |
-        | Buy some milk  | Low      |
+        | Buy some bread | H        |
+        | Buy some milk  | L        |
       Then I will see this on the list of tasks
         | Name           | Priority |
         | Buy some bread | High     |
@@ -80,7 +82,7 @@ We already have a step to add tasks:
         }
     }
 
-This code passes the contents of the feature table straight to the `AddTaskPage`. Relish will match the new *Priority* column with the `DropDown` widget returned from the `AddTaskPage.priority()` method, and pass it the *High*, *Medium* and *Low* values to it.
+This code passes the contents of the feature table straight to the `AddTaskPage`. Relish will match the new *Priority* column with the `DropDown` widget returned from the `AddTaskPage.priority()` method, and pass it the *H*, *M* and *L* values to it.
 
 We've also already implemented the step to check the list of all tasks:
 

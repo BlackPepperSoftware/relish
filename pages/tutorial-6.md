@@ -13,9 +13,9 @@ For our third scenario, we'll create a test that checks we can delete tasks. To 
       Then the delete button is disabled
       When I choose to add these tasks
         | Name           | Priority |
-        | Buy some bread | High     |
-        | Buy some milk  | Medium   |
-        | Buy some water | Low      |
+        | Buy some bread | H        |
+        | Buy some milk  | M        |
+        | Buy some water | L        |
       And I will select these tasks
         | Name           | Priority | Select |
         | Buy some bread | High     | true   |
@@ -100,7 +100,7 @@ To do that, we need to call the `withCellComponent(...)` method of the `Table` o
         }
     }
 
-The `.withCellComponent(...)` line will automatically a `Checkbox` testing for the checkbox `input` element inside the `select` column.
+The `.withCellComponent(...)` line will automatically generate a `Checkbox` component for testing the checkbox `input` element in the `select` column.
 
 ## Implement the "delete tasks" steps
 
@@ -111,9 +111,9 @@ Let's take another look at our new scenario:
       Then the delete button is disabled
       When I choose to add these tasks
         | Name           | Priority |
-        | Buy some bread | High     |
-        | Buy some milk  | Medium   |
-        | Buy some water | Low      |
+        | Buy some bread | H        |
+        | Buy some milk  | M        |
+        | Buy some water | L        |
       And I will select these tasks
         | Name           | Priority | Select |
         | Buy some bread | High     | true   |

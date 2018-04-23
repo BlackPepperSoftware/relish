@@ -7,11 +7,6 @@
         <option name="BUILDABLE" value="true" />
       </configuration>
     </facet>
-    <facet type="android-gradle" name="Android-Gradle">
-      <configuration>
-        <option name="GRADLE_PROJECT_PATH" value=":" />
-      </configuration>
-    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7">
     <output url="file://$MODULE_DIR$/build/classes/java/main" />
@@ -87,13 +82,5 @@
     <orderEntry type="library" exported="" scope="PROVIDED" name="Gradle: commons-logging-1.1.1" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="Gradle: commons-codec-1.4" level="project" />
     <orderEntry type="library" exported="" scope="PROVIDED" name="Gradle: uast-162.2228.14" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: relish.relish-1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: relish.relish-1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: relish.relish-1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: relish.relish-1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: relish.relish-1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: relish.relish-1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: relish.relish-1.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: relish.relish-1.0-SNAPSHOT" level="project" />
   </component>
 </module>

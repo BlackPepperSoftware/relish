@@ -68,16 +68,8 @@ public class SomeSteps
         taskPage.deleteButton().assertDisabled();
     }
 
-    @When("^I change the '([^']*)' task to$")
-    public void iChangeTheTaskTo(String name, @Transpose List<TableRow> task)
-    {
-        taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(4).click();
-        editTaskPage.form().set(task.get(0));
-        editTaskPage.form().saveButton().click();
-    }
-
     @When("^I edit the '([^']*)' task$")
-    public void iEditTheBuySomeMilkTask(String name)
+    public void iEditTheBuyTask(String name)
     {
         taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(4).click();
     }

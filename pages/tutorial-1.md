@@ -18,6 +18,7 @@ We will include a dependency to the Relish code, and we'll also add a few other 
     
     repositories {
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
     
     dependencies {
@@ -26,8 +27,10 @@ We will include a dependency to the Relish code, and we'll also add a few other 
         testCompile group: 'info.cukes', name: 'cucumber-junit', version: '1.2.5'
         testCompile group: 'com.codeborne', name: 'selenide', version: '4.8'
         testCompile group: 'org.hamcrest', name:'java-hamcrest', version: '2.0.0.0'
-        compile project(path: ':relish-selenide') # Replace this with a reference to however you got Relish
+        testCompile 'com.github.dogriffiths:relish:0.0.119' # For version 0.0.119
     }
+
+This will download the libraries from http://jitpack.io If you want to get the latest version of Relish, take a look at the [list of releases](https://github.com/dogriffiths/relish/releases).
 
 We'll make the assumption that you'll have a file structure like this:
 
