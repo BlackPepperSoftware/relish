@@ -4,7 +4,9 @@
 
 In this tutorial, we'll go through the steps required to create a Relish test suite for a simple task management application.
 
-You can find the completed code in the [example-selenide](https://github.com/dogriffiths/relish/tree/master/examples/selenide/example-selenide) folder of the repo.
+You can find the completed code in the [example-selenide](https://github.com/dogriffiths/relish/tree/master/examples/selenide/example-selenide) folder of the repo. When completed, the tutorial will run this sequence of automated tests:
+
+![img](../images/tutorial-run.gif)
 
 1. [Creating the project](./tutorial-1.html)
 A walkthrough of creating the tasks tutorial testing project.
@@ -29,5 +31,3 @@ Handling table columns without headings and filtering rows.
 
 7. [Custom components](./tutorial-8.html)
 If you re-use components in your, you should consider re-using components in your tests.
-
-![img](../images/tutorial-run.gif)

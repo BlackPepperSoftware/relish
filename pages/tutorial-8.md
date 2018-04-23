@@ -271,8 +271,6 @@ And we can then update our feature file to add `status` values to be set and che
           | Buy some cream | Medium   | Done    |
           | Buy some water | High     | Pending |
 
-![img](../images/tutorial-run.gif)
-
 And other than changing this in `SomeSteps.java`:
 
     taskPage.taskTable().findFirst(row -> row.get("name").equals(name)).getWidget(3).click();
@@ -290,5 +288,7 @@ to
     .withCellComponent("4", (tdCell) -> new SelenideWidget(tdCell.$("button"), this))
 
 (so that we can still click the `Edit` button, which is now in the fourth column) we're done.
+
+![img](../images/tutorial-run.gif)
 
 &lt; [Editing tasks](./tutorial-7.html) | ^ [Tutorial](./tutorial.html)
