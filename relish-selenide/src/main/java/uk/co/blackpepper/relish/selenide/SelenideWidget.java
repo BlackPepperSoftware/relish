@@ -1,5 +1,6 @@
 package uk.co.blackpepper.relish.selenide;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.WebDriverRunner;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -58,7 +59,7 @@ public class SelenideWidget extends Widget<SelenideElement> {
     public void assertInvisible() {
         attempt(() -> {
             try {
-                get().shouldBe(not(visible));
+                shouldBe(not(visible));
             } catch (ElementShould e) {
                 // Do not throw state element exception because it will mean that it is invisible
                 if (!(e.getCause() instanceof StaleElementReferenceException)) {
@@ -71,7 +72,7 @@ public class SelenideWidget extends Widget<SelenideElement> {
     @Override
     public void assertDisabled() {
         try {
-            get().shouldBe(not(enabled));
+            shouldBe(not(enabled));
         } catch (ElementShould e) {
             // Do not throw state element exception because it will mean that it is invisible
             if (!(e.getCause() instanceof StaleElementReferenceException)) {
@@ -80,9 +81,13 @@ public class SelenideWidget extends Widget<SelenideElement> {
         }
     }
 
+    public void shouldBe(Condition condition) {
+        get().shouldBe(condition);
+    }
+
     @Override
     public void assertEnabled() {
-        get().shouldBe(enabled);
+        shouldBe(enabled);
     }
 
     @Override
@@ -93,7 +98,7 @@ public class SelenideWidget extends Widget<SelenideElement> {
 
     @Override
     public void assertVisible() {
-        get().shouldBe(visible);
+        shouldBe(visible);
     }
 
     @Override
