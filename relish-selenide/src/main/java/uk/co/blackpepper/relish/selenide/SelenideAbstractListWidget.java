@@ -50,7 +50,7 @@ public abstract class SelenideAbstractListWidget<T extends SelenideWidget> exten
     @Override
     protected List<SelenideElement> items()
     {
-        return new ArrayList<>($$(itemsSelector()));
+        return new ArrayList<>(get().$$(itemsSelector()));
     }
 
     public void assertChildCount(int expectedCount, Predicate<T> predicate)
