@@ -140,4 +140,16 @@ public abstract class Component implements Getable {
     public void setStringValue(String value) {
         throw new IllegalStateException("Cannot set string value for " + this);
     }
+
+    @Override
+    public String toString() {
+        if (parent != null) {
+            return parent + "/" + this.describe();
+        }
+        return "/" + this.describe();
+    }
+
+    public String describe() {
+        return this.getClass().toString();
+    }
 }

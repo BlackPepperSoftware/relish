@@ -155,4 +155,12 @@ public class SelenideWidget extends Widget<SelenideElement> {
     public WebDriver driver() {
         return WebDriverRunner.getWebDriver();
     }
+
+    @Override
+    public String describe() {
+        if (selector != null) {
+            return selector.toString();
+        }
+        return super.describe();
+    }
 }
