@@ -1,16 +1,16 @@
 package uk.co.blackpepper.relish.selenide;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
+import com.codeborne.selenide.ex.ElementShould;
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import uk.co.blackpepper.relish.core.Component;
 import uk.co.blackpepper.relish.core.Widget;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.ex.ElementShould;
-import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -46,15 +46,19 @@ public class SelenideWidget extends Widget<SelenideElement> {
 
     @Override
     public SelenideElement get() {
-        Component parent = getParent();
-        if (selector != null) {
-            if (parent != null) {
-                if (parent instanceof SelenideWidget) {
-                    return ((SelenideWidget)parent).get().$(selector);
+        try {
+            Component parent = getParent();
+            if (selector != null) {
+                if (parent != null) {
+                    if (parent instanceof SelenideWidget) {
+                        return ((SelenideWidget) parent).get().$(selector);
+                    }
                 }
             }
+            return super.get();
+        }catch(NoSuchElementException e) {
+            throw new RuntimeException("Cannot find " + this, e);
         }
-        return super.get();
     }
 
     @Override
@@ -115,11 +119,7 @@ public class SelenideWidget extends Widget<SelenideElement> {
      * @param condition the condition
      */
     public void shouldBe(Condition condition) {
-        try {
-            get().shouldBe(condition);
-        }catch(NoSuchElementException e) {
-            throw new NoSuchElementException("Cannot find " + this, e);
-        }
+        get().shouldBe(condition);
     }
 
     @Override
