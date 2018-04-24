@@ -3,9 +3,9 @@ package uk.co.blackpepper.relish.selenide;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
+import com.codeborne.selenide.ex.ElementNotFound;
 import com.codeborne.selenide.ex.ElementShould;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -117,7 +117,7 @@ public class SelenideWidget extends Widget<SelenideElement> {
     public void shouldBe(Condition condition) {
         try {
             get().shouldBe(condition);
-        } catch (NoSuchElementException e) {
+        } catch (ElementNotFound e) {
             throw new RuntimeException("Cannot find " + this, e);
         }
     }
