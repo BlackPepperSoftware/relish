@@ -23,6 +23,18 @@ public abstract class Widget<T> extends Component {
         this.peer = peer;
     }
 
+    public WidgetContainer getRoot(Widget widget) {
+        Component parent = widget.getParent();
+        if (parent instanceof WidgetContainer) {
+            return (WidgetContainer)parent;
+        }
+        if (parent instanceof Widget) {
+            return getRoot((Widget)parent);
+        }
+        throw new IllegalStateException("Cannot get root for: " + widget);
+    }
+
+
     /**
      * Get t.
      *
