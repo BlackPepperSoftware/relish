@@ -2,6 +2,7 @@ package uk.co.blackpepper.relish.selenide;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.WebDriverRunner;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import uk.co.blackpepper.relish.core.Component;
@@ -114,7 +115,11 @@ public class SelenideWidget extends Widget<SelenideElement> {
      * @param condition the condition
      */
     public void shouldBe(Condition condition) {
-        get().shouldBe(condition);
+        try {
+            get().shouldBe(condition);
+        }catch(NoSuchElementException e) {
+            throw new NoSuchElementException("Cannot find " + this, e);
+        }
     }
 
     @Override
