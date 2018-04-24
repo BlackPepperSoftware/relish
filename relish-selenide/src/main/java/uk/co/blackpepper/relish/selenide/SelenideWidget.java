@@ -46,19 +46,15 @@ public class SelenideWidget extends Widget<SelenideElement> {
 
     @Override
     public SelenideElement get() {
-        try {
-            Component parent = getParent();
-            if (selector != null) {
-                if (parent != null) {
-                    if (parent instanceof SelenideWidget) {
-                        return ((SelenideWidget) parent).get().$(selector);
-                    }
+        Component parent = getParent();
+        if (selector != null) {
+            if (parent != null) {
+                if (parent instanceof SelenideWidget) {
+                    return ((SelenideWidget) parent).get().$(selector);
                 }
             }
-            return super.get();
-        }catch(NoSuchElementException e) {
-            throw new RuntimeException("Cannot find " + this, e);
         }
+        return super.get();
     }
 
     @Override
@@ -119,7 +115,11 @@ public class SelenideWidget extends Widget<SelenideElement> {
      * @param condition the condition
      */
     public void shouldBe(Condition condition) {
-        get().shouldBe(condition);
+        try {
+            get().shouldBe(condition);
+        } catch (NoSuchElementException e) {
+            throw new RuntimeException("Cannot find " + this, e);
+        }
     }
 
     @Override
