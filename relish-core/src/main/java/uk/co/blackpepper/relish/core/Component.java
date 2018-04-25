@@ -36,6 +36,14 @@ public abstract class Component implements Getable {
     public Component getParent() {
         return parent;
     }
+    
+    public Component getRoot(Widget widget) {
+        Component parent = widget.getParent();
+        if (parent == null) {
+            return this;
+        }
+        return parent;
+    }
 
     /**
      * Assert that the component is visible.
