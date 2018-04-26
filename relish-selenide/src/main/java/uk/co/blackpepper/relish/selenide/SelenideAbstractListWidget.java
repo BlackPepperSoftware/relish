@@ -53,7 +53,7 @@ public abstract class SelenideAbstractListWidget<T extends SelenideWidget> exten
      */
     public T findFirst(Predicate<T> itemPredicate)
     {
-        attempt(() -> findFirstImpl(itemPredicate), 500, 4);
+        attempt(() -> findFirstImpl(itemPredicate), 500, 8);
         return findFirstImpl(itemPredicate);
     }
 
