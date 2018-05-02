@@ -4,7 +4,7 @@ apply plugin: 'java'
 
 apply plugin: 'maven'
 
-group = 'com.github.dogriffiths'
+group = 'com.github.davidgriffithsbp'
 
 sourceCompatibility = 1.7
 

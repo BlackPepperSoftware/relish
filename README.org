@@ -14,7 +14,7 @@ There are currently two flavours of Relish:
 * =relish-espresso= For testing Android applications.
   This requires the libraries `relish-core-....jar` and `relish-espresso-....aar`.
 
-You can find the latest version of these libraries on the [releases page](https://github.com/dogriffiths/relish/releases).
+You can find the latest version of these libraries on the [releases page](https://github.com/davidgriffithsbp/relish/releases).
 
 * Getting the libraries for Maven/gradle:
 
@@ -29,7 +29,7 @@ The libraries can be downloaded through http://jitpack.io, so, for example, this
 
   dependencies {
     ....
-    testCompile 'com.github.dogriffiths:relish:0.0.119' # For version 0.0.119
+    testCompile 'com.github.davidgriffithsbp:relish:0.0.119' # For version 0.0.119
   }
 #+END_SRC
 

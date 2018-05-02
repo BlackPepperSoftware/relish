@@ -27,10 +27,10 @@ We will include a dependency to the Relish code, and we'll also add a few other 
         testCompile group: 'info.cukes', name: 'cucumber-junit', version: '1.2.5'
         testCompile group: 'com.codeborne', name: 'selenide', version: '4.8'
         testCompile group: 'org.hamcrest', name:'java-hamcrest', version: '2.0.0.0'
-        testCompile 'com.github.dogriffiths:relish:0.0.119' # For version 0.0.119
+        testCompile 'com.github.davidgriffithsbp:relish:0.0.119' # For version 0.0.119
     }
 
-This will download the libraries from http://jitpack.io If you want to get the latest version of Relish, take a look at the [list of releases](https://github.com/dogriffiths/relish/releases).
+This will download the libraries from http://jitpack.io If you want to get the latest version of Relish, take a look at the [list of releases](https://github.com/davidgriffithsbp/relish/releases).
 
 We'll make the assumption that you'll have a file structure like this:
 

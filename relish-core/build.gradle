@@ -5,7 +5,7 @@ apply plugin: 'org.sonarqube'
 apply plugin: 'jacoco'
 apply plugin: 'maven'
 
-group = 'com.github.dogriffiths'
+group = 'com.github.davidgriffithsbp'
 
 
 sourceCompatibility = 1.7
